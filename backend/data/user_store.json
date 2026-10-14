@@ -1,0 +1,886 @@
+{
+  "users": {
+    "u_demo_alex": {
+      "user_id": "u_demo_alex",
+      "name": "Alex Rivera",
+      "email": "alex@recoza.io",
+      "password_hash": "d580e656b1fa542e8cd66c50ad0b88686c96a9ce7403e57cb0fb774271bdd181",
+      "is_first_time": false,
+      "role": "Creative Builder",
+      "created_at": 1791524535.575171,
+      "preferences": {
+        "interests": [
+          "Building & Construction Sets",
+          "STEM & Learning Toys"
+        ],
+        "relevance_weight": 85,
+        "familiarity_weight": 60,
+        "discovery_weight": 75,
+        "priority_mode": true,
+        "price_range": [
+          10,
+          120
+        ]
+      }
+    },
+    "u_demo_sarah": {
+      "user_id": "u_demo_sarah",
+      "name": "Sarah Jenkins",
+      "email": "sarah@recoza.io",
+      "password_hash": "d580e656b1fa542e8cd66c50ad0b88686c96a9ce7403e57cb0fb774271bdd181",
+      "is_first_time": false,
+      "role": "Collector & Educator",
+      "created_at": 1791697335.575171,
+      "preferences": {
+        "interests": [
+          "Puzzles & Family Board Games",
+          "Arts & Creative Crafts",
+          "Building & Construction Sets",
+          "STEM & Learning Toys",
+          "Outdoor & Active Play",
+          "Pretend Play & Dolls"
+        ],
+        "relevance_weight": 57,
+        "familiarity_weight": 79,
+        "discovery_weight": 46,
+        "priority_mode": true,
+        "price_range": [
+          0,
+          45
+        ]
+      }
+    },
+    "user_7e5aba0ad2": {
+      "user_id": "user_7e5aba0ad2",
+      "name": "Test User",
+      "email": "test1@recoza.io",
+      "password_hash": "216104113621b26b4d0943040dc4aace4a0004d32d29c2a6b3dd1e67f4709871",
+      "is_first_time": false,
+      "role": "Member",
+      "created_at": 1791956631.1231873,
+      "preferences": {
+        "interests": [
+          "Building & Construction Sets",
+          "STEM & Learning Toys"
+        ],
+        "relevance_weight": 88,
+        "familiarity_weight": 60,
+        "discovery_weight": 70,
+        "priority_mode": true,
+        "price_range": [
+          0,
+          200
+        ]
+      }
+    },
+    "user_8498f1b8b0": {
+      "user_id": "user_8498f1b8b0",
+      "name": "bindu",
+      "email": "bibinsee1@gmail.com",
+      "password_hash": "a108ab057bc7862ffa6480dc690e605bf59a946ae4ce82e72daf7aef3b1c9a1f",
+      "is_first_time": false,
+      "role": "Member",
+      "created_at": 1791957487.6406116,
+      "preferences": {
+        "interests": [
+          "Arts & Creative Crafts",
+          "Pretend Play & Dolls",
+          "STEM & Learning Toys"
+        ],
+        "relevance_weight": 75,
+        "familiarity_weight": 11,
+        "discovery_weight": 70,
+        "priority_mode": true,
+        "price_range": [
+          0,
+          100
+        ]
+      }
+    }
+  },
+  "email_to_id": {
+    "alex@recoza.io": "u_demo_alex",
+    "sarah@recoza.io": "u_demo_sarah",
+    "test1@recoza.io": "user_7e5aba0ad2",
+    "bibinsee1@gmail.com": "user_8498f1b8b0"
+  },
+  "saved_items": {
+    "u_demo_alex": [
+      "B00NHQF65S",
+      "B07BMH5L8B"
+    ],
+    "u_demo_sarah": [
+      "B09M7XZ33P",
+      "B0BVKDKNDH"
+    ],
+    "user_7e5aba0ad2": [
+      "B00NHQF65S"
+    ],
+    "user_8498f1b8b0": []
+  },
+  "chat_sessions": {
+    "u_demo_alex": [
+      {
+        "session_id": "sess_u_demo_alex_1",
+        "title": "Initial Creative Builder Exploration",
+        "created_at": 1791524535.575171,
+        "updated_at": 1791528135.575171,
+        "messages": [
+          {
+            "id": "m1",
+            "sender": "user",
+            "text": "Looking for high quality sets with good reviews",
+            "timestamp": 1791524535.575171
+          },
+          {
+            "id": "m2",
+            "sender": "assistant",
+            "text": "Found verified items in your primary interest communities with verified graph co-occurrences.",
+            "timestamp": 1791524537.575171,
+            "items": []
+          }
+        ]
+      }
+    ],
+    "u_demo_sarah": [
+      {
+        "session_id": "sess_u_demo_sarah_1",
+        "title": "Initial Collector & Educator Exploration",
+        "created_at": 1791697335.575171,
+        "updated_at": 1791700935.575171,
+        "messages": [
+          {
+            "id": "m1",
+            "sender": "user",
+            "text": "Looking for high quality sets with good reviews",
+            "timestamp": 1791697335.575171
+          },
+          {
+            "id": "m2",
+            "sender": "assistant",
+            "text": "Found verified items in your primary interest communities with verified graph co-occurrences.",
+            "timestamp": 1791697337.575171,
+            "items": []
+          }
+        ]
+      },
+      {
+        "session_id": "default",
+        "title": "Show top LEGO building sets ...",
+        "created_at": 1791958632.4908748,
+        "updated_at": 1791958654.691178,
+        "messages": [
+          {
+            "id": "welcome",
+            "sender": "assistant",
+            "text": "Welcome back, Sarah Jenkins! I'm your Recoza conversational advisor. How can I guide your discovery today? You can ask for specific categories, gift ideas, budget constraints, or age groups grounded in our 2,399-item knowledge graph.",
+            "timestamp": 1791958574339
+          },
+          {
+            "id": "u_1791958632448",
+            "sender": "user",
+            "text": "Show top LEGO building sets under $50",
+            "timestamp": 1791958632448
+          },
+          {
+            "id": "b_1791958632483",
+            "sender": "assistant",
+            "text": "I found some top-rated options in **Building Toys** that align with your request and your active preference history. Here are my verified recommendations:",
+            "items": [
+              {
+                "item_id": "B0C2LPG6W2",
+                "title": "Toy Item B0C2LPG6W2",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 26.8,
+                "community_id": 1,
+                "popularity": 24,
+                "degree": 41,
+                "ranking_meta": {
+                  "comm_score": 0.6113,
+                  "cf_score": 0,
+                  "verified": true,
+                  "final_score": 0.3556
+                },
+                "explanation": {
+                  "item_id": "B0C2LPG6W2",
+                  "primary_reason": "Popular top-rated selection in Toys & Games with high verified quality.",
+                  "community_context": "Belongs to Community Cluster #1, which accounts for 61% of your active preference affinity.",
+                  "graph_path": "Verified across the Amazon Toys & Games knowledge graph with 24 customer interactions.",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 1
+                }
+              },
+              {
+                "item_id": "B0054TRQA4",
+                "title": "Aurora World Flopsie Drake Dolphin 12\"",
+                "category": "Toys & Games",
+                "store": "Aurora Plush",
+                "average_rating": 5,
+                "rating_number": 4,
+                "price": 70.85,
+                "community_id": 3,
+                "popularity": 18,
+                "degree": 50,
+                "ranking_meta": {
+                  "comm_score": 0.3887,
+                  "cf_score": 0,
+                  "verified": true,
+                  "final_score": 0.2444
+                },
+                "explanation": {
+                  "item_id": "B0054TRQA4",
+                  "primary_reason": "Popular top-rated selection in Toys & Games with high verified quality.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 38% of your active preference affinity.",
+                  "graph_path": "Verified across the Amazon Toys & Games knowledge graph with 18 customer interactions.",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 5,
+                  "rating_count": 4,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B09PH94SZC",
+                "title": "Toy Item B09PH94SZC",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 70.54,
+                "community_id": 3,
+                "popularity": 15,
+                "degree": 93,
+                "ranking_meta": {
+                  "comm_score": 0.3887,
+                  "cf_score": 0,
+                  "verified": true,
+                  "final_score": 0.2444
+                },
+                "explanation": {
+                  "item_id": "B09PH94SZC",
+                  "primary_reason": "Popular top-rated selection in Toys & Games with high verified quality.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 38% of your active preference affinity.",
+                  "graph_path": "Verified across the Amazon Toys & Games knowledge graph with 15 customer interactions.",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B0829DTJ39",
+                "title": "Toy Item B0829DTJ39",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 38.78,
+                "community_id": 4,
+                "popularity": 15,
+                "degree": 77,
+                "ranking_meta": {
+                  "comm_score": 0,
+                  "cf_score": 0,
+                  "verified": false,
+                  "final_score": -0.3
+                },
+                "explanation": {
+                  "item_id": "B0829DTJ39",
+                  "primary_reason": "Popular top-rated selection in Toys & Games with high verified quality.",
+                  "community_context": "Introduced from Community Cluster #4 to provide fresh diversity and prevent recommendation echo chambers.",
+                  "graph_path": "Verified across the Amazon Toys & Games knowledge graph with 15 customer interactions.",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Exploratory Candidate",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 4
+                }
+              }
+            ],
+            "timestamp": 1791958632483
+          },
+          {
+            "id": "u_1791958654646",
+            "sender": "user",
+            "text": "make the price $80",
+            "timestamp": 1791958654646
+          },
+          {
+            "id": "b_1791958654683",
+            "sender": "assistant",
+            "text": "Based on your query 'make the price $80' and our dynamic community graph, here are the top matching items selected for relevance and variety:",
+            "items": [
+              {
+                "item_id": "B07WD5YWW9",
+                "title": "Toy Item B07WD5YWW9",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 55.91,
+                "community_id": 3,
+                "popularity": 4,
+                "degree": 74,
+                "ranking_meta": {
+                  "comm_score": 0.3887,
+                  "cf_score": 0.75,
+                  "verified": true,
+                  "final_score": 0.5819
+                },
+                "explanation": {
+                  "item_id": "B07WD5YWW9",
+                  "primary_reason": "Matches your interest in 'LEGO Unikitty! Dr. Fox Laboratory 4...' through strong relational graph paths.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 38% of your active preference affinity.",
+                  "graph_path": "Frequently co-purchased with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (3 co-occurrence links in training graph).",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B07WCQWZBD",
+                "title": "Toy Item B07WCQWZBD",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 85.82,
+                "community_id": 1,
+                "popularity": 4,
+                "degree": 39,
+                "ranking_meta": {
+                  "comm_score": 0.6113,
+                  "cf_score": 0.4,
+                  "verified": true,
+                  "final_score": 0.5356
+                },
+                "explanation": {
+                  "item_id": "B07WCQWZBD",
+                  "primary_reason": "Matches your interest in 'LEGO Unikitty! Dr. Fox Laboratory 4...' through strong relational graph paths.",
+                  "community_context": "Belongs to Community Cluster #1, which accounts for 61% of your active preference affinity.",
+                  "graph_path": "Frequently co-purchased with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-occurrence links in training graph).",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 1
+                }
+              },
+              {
+                "item_id": "B0C22M7TH5",
+                "title": "USA Toyz Under The Sea Kids Pop Up Tent - Mermaid Pop Up Kids Tent, Indoor Playhouse Tent for Girls and Boys with Kids Play Tent Storage Carry Bag, Toy Outdoor Indoor Tent for Kids, Toddler Tent",
+                "category": "Toys & Games",
+                "store": "USA Toyz",
+                "average_rating": 4.5,
+                "rating_number": 21106,
+                "price": 27.35,
+                "community_id": 1,
+                "popularity": 4,
+                "degree": 14,
+                "ranking_meta": {
+                  "comm_score": 0.6113,
+                  "cf_score": 0.1214,
+                  "verified": true,
+                  "final_score": 0.4853
+                },
+                "explanation": {
+                  "item_id": "B0C22M7TH5",
+                  "primary_reason": "Matches your interest in 'Melissa & Doug Dinosaurs 4-in-1 Woo...' through strong relational graph paths.",
+                  "community_context": "Belongs to Community Cluster #1, which accounts for 61% of your active preference affinity.",
+                  "graph_path": "Frequently co-purchased with 'Melissa & Doug Dinosaurs 4-in-1 Wooden J...' (1 co-occurrence links in training graph).",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4.5,
+                  "rating_count": 21106,
+                  "community_id": 1
+                }
+              },
+              {
+                "item_id": "B07GWZNHBG",
+                "title": "Toy Item B07GWZNHBG",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 52.59,
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 47,
+                "ranking_meta": {
+                  "comm_score": 0.3887,
+                  "cf_score": 0.5,
+                  "verified": true,
+                  "final_score": 0.4694
+                },
+                "explanation": {
+                  "item_id": "B07GWZNHBG",
+                  "primary_reason": "Matches your interest in 'LEGO Unikitty! Dr. Fox Laboratory 4...' through strong relational graph paths.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 38% of your active preference affinity.",
+                  "graph_path": "Frequently co-purchased with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-occurrence links in training graph).",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              }
+            ],
+            "timestamp": 1791958654683
+          }
+        ]
+      }
+    ],
+    "user_7e5aba0ad2": [
+      {
+        "session_id": "sess_a66f9116",
+        "title": "Creative Toys Session",
+        "created_at": 1791956691.124648,
+        "updated_at": 1791956691.124648,
+        "messages": [
+          {
+            "sender": "user",
+            "timestamp": 1791956700,
+            "id": "m1",
+            "text": "Recommend creative toys"
+          },
+          {
+            "sender": "assistant",
+            "timestamp": 1791956702,
+            "items": [],
+            "id": "m2",
+            "text": "Here are top verified recommendations for creative toys"
+          }
+        ]
+      }
+    ],
+    "user_8498f1b8b0": [
+      {
+        "session_id": "default",
+        "title": "Find STEM robotics & science...",
+        "created_at": 1791957513.6222215,
+        "updated_at": 1791957619.9109173,
+        "messages": [
+          {
+            "id": "welcome",
+            "sender": "assistant",
+            "text": "Welcome back, bindu! I'm your Recoza conversational advisor. How can I guide your discovery today? You can ask for specific categories, gift ideas, budget constraints, or age groups grounded in our 2,399-item knowledge graph.",
+            "timestamp": 1791957612347
+          },
+          {
+            "id": "u_1791957619837",
+            "sender": "user",
+            "text": "Find STEM robotics & science experiment kits",
+            "timestamp": 1791957619837
+          },
+          {
+            "id": "b_1791957619887",
+            "sender": "assistant",
+            "text": "I found some top-rated options in **Building Toys** that align with your request and your active preference history. Here are my verified recommendations:",
+            "items": [
+              {
+                "item_id": "B0054TRQA4",
+                "title": "Aurora World Flopsie Drake Dolphin 12\"",
+                "category": "Toys & Games",
+                "store": "Aurora Plush",
+                "average_rating": 5,
+                "rating_number": 4,
+                "price": 70.85,
+                "community_id": 3,
+                "popularity": 18,
+                "degree": 50,
+                "ranking_meta": {
+                  "comm_score": 1,
+                  "cf_score": 0,
+                  "verified": true,
+                  "final_score": 0.55
+                },
+                "explanation": {
+                  "item_id": "B0054TRQA4",
+                  "primary_reason": "Popular top-rated selection in Toys & Games with high verified quality.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 100% of your active preference affinity.",
+                  "graph_path": "Verified across the Amazon Toys & Games knowledge graph with 18 customer interactions.",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 5,
+                  "rating_count": 4,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B09PH94SZC",
+                "title": "Toy Item B09PH94SZC",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 70.54,
+                "community_id": 3,
+                "popularity": 15,
+                "degree": 93,
+                "ranking_meta": {
+                  "comm_score": 1,
+                  "cf_score": 0,
+                  "verified": true,
+                  "final_score": 0.55
+                },
+                "explanation": {
+                  "item_id": "B09PH94SZC",
+                  "primary_reason": "Popular top-rated selection in Toys & Games with high verified quality.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 100% of your active preference affinity.",
+                  "graph_path": "Verified across the Amazon Toys & Games knowledge graph with 15 customer interactions.",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B0C2LPG6W2",
+                "title": "Toy Item B0C2LPG6W2",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 26.8,
+                "community_id": 1,
+                "popularity": 24,
+                "degree": 41,
+                "ranking_meta": {
+                  "comm_score": 0,
+                  "cf_score": 0,
+                  "verified": false,
+                  "final_score": -0.3
+                },
+                "explanation": {
+                  "item_id": "B0C2LPG6W2",
+                  "primary_reason": "Popular top-rated selection in Toys & Games with high verified quality.",
+                  "community_context": "Introduced from Community Cluster #1 to provide fresh diversity and prevent recommendation echo chambers.",
+                  "graph_path": "Verified across the Amazon Toys & Games knowledge graph with 24 customer interactions.",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Exploratory Candidate",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 1
+                }
+              },
+              {
+                "item_id": "B0829DTJ39",
+                "title": "Toy Item B0829DTJ39",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 38.78,
+                "community_id": 4,
+                "popularity": 15,
+                "degree": 77,
+                "ranking_meta": {
+                  "comm_score": 0,
+                  "cf_score": 0,
+                  "verified": false,
+                  "final_score": -0.3
+                },
+                "explanation": {
+                  "item_id": "B0829DTJ39",
+                  "primary_reason": "Popular top-rated selection in Toys & Games with high verified quality.",
+                  "community_context": "Introduced from Community Cluster #4 to provide fresh diversity and prevent recommendation echo chambers.",
+                  "graph_path": "Verified across the Amazon Toys & Games knowledge graph with 15 customer interactions.",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Exploratory Candidate",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 4
+                }
+              }
+            ],
+            "timestamp": 1791957619887
+          }
+        ]
+      },
+      {
+        "session_id": "sess_1791957646322",
+        "title": "Recommend cooperative family...",
+        "created_at": 1791957664.068519,
+        "updated_at": 1791957671.1998384,
+        "messages": [
+          {
+            "id": "welcome",
+            "sender": "assistant",
+            "text": "Starting a fresh chat! What are you looking for right now? Try asking about specific toy categories, family games, or builder sets.",
+            "timestamp": 1791957646322
+          },
+          {
+            "id": "u_1791957663976",
+            "sender": "user",
+            "text": "Recommend cooperative family board games",
+            "timestamp": 1791957663976
+          },
+          {
+            "id": "b_1791957664023",
+            "sender": "assistant",
+            "text": "I found some top-rated options in **Toys & Games** that align with your request and your active preference history. Here are my verified recommendations:",
+            "items": [
+              {
+                "item_id": "B07WD5YWW9",
+                "title": "Toy Item B07WD5YWW9",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 55.91,
+                "community_id": 3,
+                "popularity": 4,
+                "degree": 74,
+                "ranking_meta": {
+                  "comm_score": 1,
+                  "cf_score": 0.75,
+                  "verified": true,
+                  "final_score": 0.8875
+                },
+                "explanation": {
+                  "item_id": "B07WD5YWW9",
+                  "primary_reason": "Matches your interest in 'LEGO Unikitty! Dr. Fox Laboratory 4...' through strong relational graph paths.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 100% of your active preference affinity.",
+                  "graph_path": "Frequently co-purchased with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (3 co-occurrence links in training graph).",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B079KNT82N",
+                "title": "Toy Item B079KNT82N",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 56.63,
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 67,
+                "ranking_meta": {
+                  "comm_score": 1,
+                  "cf_score": 0.5,
+                  "verified": true,
+                  "final_score": 0.775
+                },
+                "explanation": {
+                  "item_id": "B079KNT82N",
+                  "primary_reason": "Matches your interest in 'LEGO Unikitty! Dr. Fox Laboratory 4...' through strong relational graph paths.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 100% of your active preference affinity.",
+                  "graph_path": "Frequently co-purchased with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-occurrence links in training graph).",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B07JXNZXNK",
+                "title": "Toy Item B07JXNZXNK",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 53.36,
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 54,
+                "ranking_meta": {
+                  "comm_score": 1,
+                  "cf_score": 0.5,
+                  "verified": true,
+                  "final_score": 0.775
+                },
+                "explanation": {
+                  "item_id": "B07JXNZXNK",
+                  "primary_reason": "Matches your interest in 'LEGO Unikitty! Dr. Fox Laboratory 4...' through strong relational graph paths.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 100% of your active preference affinity.",
+                  "graph_path": "Frequently co-purchased with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-occurrence links in training graph).",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B07GWZNHBG",
+                "title": "Toy Item B07GWZNHBG",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 52.59,
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 47,
+                "ranking_meta": {
+                  "comm_score": 1,
+                  "cf_score": 0.5,
+                  "verified": true,
+                  "final_score": 0.775
+                },
+                "explanation": {
+                  "item_id": "B07GWZNHBG",
+                  "primary_reason": "Matches your interest in 'LEGO Unikitty! Dr. Fox Laboratory 4...' through strong relational graph paths.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 100% of your active preference affinity.",
+                  "graph_path": "Frequently co-purchased with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-occurrence links in training graph).",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              }
+            ],
+            "timestamp": 1791957664023
+          },
+          {
+            "id": "u_1791957671104",
+            "sender": "user",
+            "text": "Arts and craft kits for creative projects",
+            "timestamp": 1791957671104
+          },
+          {
+            "id": "b_1791957671147",
+            "sender": "assistant",
+            "text": "Based on your query 'Arts and craft kits for creative projects' and our dynamic community graph, here are the top matching items selected for relevance and variety:",
+            "items": [
+              {
+                "item_id": "B07WD5YWW9",
+                "title": "Toy Item B07WD5YWW9",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 55.91,
+                "community_id": 3,
+                "popularity": 4,
+                "degree": 74,
+                "ranking_meta": {
+                  "comm_score": 1,
+                  "cf_score": 0.75,
+                  "verified": true,
+                  "final_score": 0.8875
+                },
+                "explanation": {
+                  "item_id": "B07WD5YWW9",
+                  "primary_reason": "Matches your interest in 'LEGO Unikitty! Dr. Fox Laboratory 4...' through strong relational graph paths.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 100% of your active preference affinity.",
+                  "graph_path": "Frequently co-purchased with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (3 co-occurrence links in training graph).",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B079KNT82N",
+                "title": "Toy Item B079KNT82N",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 56.63,
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 67,
+                "ranking_meta": {
+                  "comm_score": 1,
+                  "cf_score": 0.5,
+                  "verified": true,
+                  "final_score": 0.775
+                },
+                "explanation": {
+                  "item_id": "B079KNT82N",
+                  "primary_reason": "Matches your interest in 'LEGO Unikitty! Dr. Fox Laboratory 4...' through strong relational graph paths.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 100% of your active preference affinity.",
+                  "graph_path": "Frequently co-purchased with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-occurrence links in training graph).",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B07JXNZXNK",
+                "title": "Toy Item B07JXNZXNK",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 53.36,
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 54,
+                "ranking_meta": {
+                  "comm_score": 1,
+                  "cf_score": 0.5,
+                  "verified": true,
+                  "final_score": 0.775
+                },
+                "explanation": {
+                  "item_id": "B07JXNZXNK",
+                  "primary_reason": "Matches your interest in 'LEGO Unikitty! Dr. Fox Laboratory 4...' through strong relational graph paths.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 100% of your active preference affinity.",
+                  "graph_path": "Frequently co-purchased with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-occurrence links in training graph).",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B07GWZNHBG",
+                "title": "Toy Item B07GWZNHBG",
+                "category": "Toys & Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": 52.59,
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 47,
+                "ranking_meta": {
+                  "comm_score": 1,
+                  "cf_score": 0.5,
+                  "verified": true,
+                  "final_score": 0.775
+                },
+                "explanation": {
+                  "item_id": "B07GWZNHBG",
+                  "primary_reason": "Matches your interest in 'LEGO Unikitty! Dr. Fox Laboratory 4...' through strong relational graph paths.",
+                  "community_context": "Belongs to Community Cluster #3, which accounts for 100% of your active preference affinity.",
+                  "graph_path": "Frequently co-purchased with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-occurrence links in training graph).",
+                  "recency_reason": "Ranked using exponential memory decay (alpha = 0.85) reflecting your latest interactions.",
+                  "trust_badge": "Graph Verified (+0.05 Bonus)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              }
+            ],
+            "timestamp": 1791957671147
+          }
+        ]
+      }
+    ]
+  }
+}

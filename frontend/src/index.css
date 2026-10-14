@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    color: #E2E8F0;
+    background-color: #080B10;
+    overflow-x: hidden;
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(2deg);
+  }
+}
+
+@keyframes float-reverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(16px) rotate(-2deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: float-reverse 9s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 6s ease-in-out infinite;
+}
+
+/* Dark Aurora Glass Panels */
+.aurora-card {
+  background: rgba(13, 20, 30, 0.65);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(45, 212, 191, 0.16);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.aurora-card:hover {
+  border-color: rgba(45, 212, 191, 0.32);
+  box-shadow: 0 25px 60px rgba(6, 182, 212, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.aurora-pill {
+  background: rgba(15, 23, 36, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(45, 212, 191, 0.22);
+}
+
+.aurora-pill:hover {
+  background: rgba(20, 30, 48, 0.85);
+  border-color: rgba(45, 212, 191, 0.45);
+}
+
+.aurora-btn-glow {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.22), rgba(16, 185, 129, 0.32));
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  box-shadow: 0 0 20px rgba(20, 184, 166, 0.2);
+}
+
+.aurora-btn-glow:hover {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.35), rgba(16, 185, 129, 0.45));
+  border-color: rgba(45, 212, 191, 0.6);
+  box-shadow: 0 0 30px rgba(20, 184, 166, 0.35);
+}
+
+/* Custom Scrollbar for Dark Theme */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #080B10;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(45, 212, 191, 0.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(45, 212, 191, 0.4);
+}
+
+/* Glowing Custom Range Sliders */
+input[type=range] {
+  accent-color: #2DD4BF;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #2DD4BF;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.9);
+  border: 2px solid #FFFFFF;
+}
+
+input[type=range]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #2DD4BF;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.9);
+  border: 2px solid #FFFFFF;
+}
