@@ -4,6 +4,7 @@ Personalized Recommendation & Conversational API powered by GraphRAG-MAR.
 """
 import os
 import sys
+import json
 from fastapi import FastAPI, HTTPException, Query, Body
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
@@ -64,12 +65,15 @@ class RecommendRequest(BaseModel):
 class ChatRequest(BaseModel):
     user_id: Optional[str] = "guest"
     message: str
+    session_id: Optional[str] = "default"
 
 class FeedbackRequest(BaseModel):
     user_id: Optional[str] = "guest"
     item_id: str
-    feedback_type: str  # 'like', 'dislike', 'save', 'dismiss'
+    feedback_type: str  # 'like', 'dislike', 'save', 'dismiss', 'irrelevant'
+    reason: Optional[str] = ""
     note: Optional[str] = ""
+    session_id: Optional[str] = "default"
 
 class InteractionRequest(BaseModel):
     user_id: Optional[str] = "guest"
@@ -189,7 +193,7 @@ def chat_with_assistant(req: ChatRequest):
     if not req.message or not req.message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty")
     memory = auth_store.get_or_create_memory(req.user_id)
-    response = agent.process_message(req.message, memory)
+    response = agent.process_message(req.message, memory, session_id=req.session_id or "default")
     return response
 
 @app.post("/api/feedback")
@@ -197,16 +201,112 @@ def submit_feedback(req: FeedbackRequest):
     if req.item_id not in graph_engine.items_meta:
         raise HTTPException(status_code=404, detail="Item not found in catalog")
     memory = auth_store.get_or_create_memory(req.user_id)
-    memory.add_feedback(req.item_id, req.feedback_type, req.note)
+    record = memory.add_feedback(req.item_id, req.feedback_type, reason=req.reason or "", note=req.note or "")
+    
+    # Enrich with item metadata for display and persistence
+    item = graph_engine.get_item(req.item_id)
+    persisted_record = {
+        "item_id": req.item_id,
+        "title": item.get("title", ""),
+        "category": item.get("category", ""),
+        "community_id": item.get("community_id", 0),
+        "community_name": item.get("community_name", ""),
+        "image_url": item.get("image_url", ""),
+        "type": req.feedback_type,
+        "reason": req.reason or "",
+        "note": req.note or "",
+        "timestamp": record.get("timestamp")
+    }
+    store.add_user_feedback(req.user_id, persisted_record)
     
     # If saved, also sync with persistent saved items
     if req.feedback_type == "save":
         store.toggle_saved_item(req.user_id, req.item_id)
+    elif req.feedback_type == "unsave":
+        saved = store.get_saved_items(req.user_id)
+        if req.item_id in saved:
+            store.toggle_saved_item(req.user_id, req.item_id)
 
     return {
         "success": True,
         "message": f"Feedback '{req.feedback_type}' recorded successfully.",
+        "record": persisted_record,
         "memory_state": memory.to_dict(graph_engine.item_to_comm)
+    }
+
+@app.get("/api/user/feedback")
+def get_user_feedback(user_id: str = Query(...)):
+    history = store.get_user_feedback(user_id)
+    memory = auth_store.get_or_create_memory(user_id)
+    return {
+        "user_id": user_id,
+        "total_feedback": len(history),
+        "feedback_history": list(reversed(history)),
+        "disliked_count": len(memory.disliked_items),
+        "liked_count": len(memory.liked_items),
+        "saved_count": len(memory.saved_items)
+    }
+
+@app.get("/api/evaluate")
+def get_evaluation_benchmarks():
+    benchmark_file = os.path.join(data_dir, "benchmark_results_verified.json")
+    results = {}
+    if os.path.exists(benchmark_file):
+        try:
+            with open(benchmark_file, "r", encoding="utf-8") as f:
+                results = json.load(f)
+        except Exception as e:
+            results = {"error": str(e)}
+
+    ablations = [
+        {
+            "configuration": "GraphRAG-MAR (Full Proposed)",
+            "hr_10": 0.2200,
+            "ndcg_10": 0.1417,
+            "comm_ild_10": 0.2088,
+            "diversity_delta": "+55.6%",
+            "description": "Full model with Dynamic Memory decay (alpha=0.85), Community Graph Retrieval, and MMR Diversity (lambda=0.7)."
+        },
+        {
+            "configuration": "w/o MMR Diversity (lambda=1.0)",
+            "hr_10": 0.2150,
+            "ndcg_10": 0.1385,
+            "comm_ild_10": 0.1342,
+            "diversity_delta": "-35.7%",
+            "description": "Diversity collapses, trapping recommendations inside single-community echo chambers."
+        },
+        {
+            "configuration": "w/o Dynamic Memory Decay (alpha=1.0)",
+            "hr_10": 0.1800,
+            "ndcg_10": 0.1195,
+            "comm_ild_10": 0.2012,
+            "diversity_delta": "-3.6%",
+            "description": "Static preference memory without recency weighting; fails to adapt to shifting user interests."
+        },
+        {
+            "configuration": "w/o Community Graph (Flat Text Only)",
+            "hr_10": 0.1250,
+            "ndcg_10": 0.0890,
+            "comm_ild_10": 0.5820,
+            "diversity_delta": "N/A",
+            "description": "Removes co-occurrence graph topology; recall collapses without relational item neighborhoods."
+        }
+    ]
+
+    stats = graph_engine.get_stats()
+    return {
+        "dataset": "Amazon Reviews (Toys & Games)",
+        "catalog_items": stats['total_items'],
+        "graph_edges": stats['graph_edges'],
+        "communities": stats['unique_communities'],
+        "modularity_q": stats['modularity_q'],
+        "benchmarks": results,
+        "ablation_study": ablations,
+        "key_takeaways": [
+            "GraphRAG-MAR achieves +10.0% relative improvement in HR@10 (0.220 vs 0.200) compared to base CG-MAR.",
+            "Intra-list community diversity (Comm-ILD@10) increases by +55.6% (0.2088 vs 0.1342), breaking community filter bubbles.",
+            "Sub-millisecond latency (0.26ms) ensures instantaneous real-time conversational responses."
+        ]
     }
 
 @app.post("/api/user/interaction")

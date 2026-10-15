@@ -137,7 +137,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   <div className="min-w-0 pr-2">
                     <span className="text-[10px] font-bold text-emerald-700 uppercase block">{it.category}</span>
                     <h4 className="text-xs font-bold text-slate-800 truncate group-hover:text-emerald-800">{it.title}</h4>
-                    <span className="text-xs font-extrabold text-slate-900">${it.price.toFixed(2)}</span>
+                    <span className="text-xs font-extrabold text-slate-900">{it.price_formatted || (it.price != null ? `$${it.price.toFixed(2)}` : 'Price unavailable')}</span>
                   </div>
                   <button
                     onClick={(e) => {
@@ -176,7 +176,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   <div className="min-w-0 pr-2">
                     <span className="text-[10px] font-bold text-purple-600 uppercase block">{it.category}</span>
                     <h4 className="text-xs font-bold text-slate-800 truncate group-hover:text-purple-800">{it.title}</h4>
-                    <span className="text-xs font-extrabold text-slate-900">${it.price.toFixed(2)}</span>
+                    <span className="text-xs font-extrabold text-slate-900">{it.price_formatted || (it.price != null ? `$${it.price.toFixed(2)}` : 'Price unavailable')}</span>
                   </div>
                   <button
                     onClick={(e) => {

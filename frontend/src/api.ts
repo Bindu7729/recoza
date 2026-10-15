@@ -7,7 +7,9 @@ import {
   UserProfile,
   UserPreferences,
   ChatSessionSummary,
-  ChatSessionDetail
+  ChatSessionDetail,
+  FeedbackRecord,
+  EvaluationData
 } from './types'
 
 const BASE_URL = '/api'
@@ -88,13 +90,22 @@ export async function fetchRecommendations(params: {
 export async function sendChatMessage(params: {
   user_id?: string
   message: string
-}): Promise<{ reply: string; category_detected?: string; items: Item[]; memory_summary: UserMemory }> {
+  session_id?: string
+}): Promise<{
+  reply: string
+  category_detected?: string
+  items: Item[]
+  clarification_needed?: boolean
+  suggested_replies?: string[]
+  memory_summary: UserMemory
+}> {
   const res = await fetch(`${BASE_URL}/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       user_id: params.user_id || 'guest',
-      message: params.message
+      message: params.message,
+      session_id: params.session_id || 'default'
     })
   })
   if (!res.ok) throw new Error('Failed to send chat message')
@@ -104,15 +115,41 @@ export async function sendChatMessage(params: {
 export async function submitFeedback(params: {
   user_id: string
   item_id: string
-  feedback_type: 'like' | 'dislike' | 'save' | 'dismiss'
+  feedback_type: 'like' | 'dislike' | 'save' | 'unsave' | 'dismiss' | 'irrelevant'
+  reason?: string
   note?: string
-}): Promise<{ success: boolean; message: string; memory_state: UserMemory }> {
+  session_id?: string
+}): Promise<{
+  success: boolean
+  message: string
+  record?: FeedbackRecord
+  memory_state: UserMemory
+}> {
   const res = await fetch(`${BASE_URL}/feedback`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(params)
   })
   if (!res.ok) throw new Error('Failed to submit feedback')
+  return res.json()
+}
+
+export async function fetchUserFeedback(userId: string): Promise<{
+  user_id: string
+  total_feedback: number
+  feedback_history: FeedbackRecord[]
+  disliked_count: number
+  liked_count: number
+  saved_count: number
+}> {
+  const res = await fetch(`${BASE_URL}/user/feedback?user_id=${encodeURIComponent(userId)}`)
+  if (!res.ok) throw new Error('Failed to fetch feedback history')
+  return res.json()
+}
+
+export async function fetchEvaluationBenchmarks(): Promise<EvaluationData> {
+  const res = await fetch(`${BASE_URL}/evaluate`)
+  if (!res.ok) throw new Error('Failed to fetch evaluation benchmarks')
   return res.json()
 }
 

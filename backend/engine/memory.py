@@ -1,7 +1,8 @@
 """
 Recoza Dynamic Preference Memory
 Implements exponential recency decay (alpha = 0.85),
-dynamic community affinity tracking, and real-time feedback logging.
+short-term session context vs long-term persistent preference separation,
+and observable feedback logging with structured rejection reasons.
 """
 import time
 from collections import defaultdict
@@ -13,9 +14,34 @@ class UserMemory:
         self.history = []  # list of dicts: {'item_id': str, 'timestamp': float, 'title': str}
         self.liked_items = set()
         self.disliked_items = set()
-        self.feedback_log = [] # list of dicts: {'item_id', 'type', 'timestamp', 'note'}
-        self.conversational_queries = [] # list of user chat queries
+        self.saved_items = set()
+        self.feedback_log = [] # list of dicts: {'item_id', 'type', 'reason', 'timestamp', 'note'}
+        self.conversational_queries = []
         
+        # Short-term session preferences (separated from persistent profile preferences)
+        self.session_states = defaultdict(lambda: {
+            'last_recommended_items': [],
+            'category_constraint': None,
+            'max_budget': None,
+            'min_rating': 0.0,
+            'exclusions': set(),
+            'target_audience': None,
+            'playstyle': None,
+            'last_query': ''
+        })
+        
+    def get_session(self, session_id: str) -> dict:
+        sess_key = session_id or "default"
+        return self.session_states[sess_key]
+
+    def update_session(self, session_id: str, **kwargs):
+        sess = self.get_session(session_id)
+        for k, v in kwargs.items():
+            if k == 'exclusions' and isinstance(v, (set, list)):
+                sess['exclusions'].update(v)
+            else:
+                sess[k] = v
+
     def add_interaction(self, item_id: str, title: str = ""):
         self.history.append({
             'item_id': item_id,
@@ -23,24 +49,35 @@ class UserMemory:
             'timestamp': time.time()
         })
 
-    def add_feedback(self, item_id: str, feedback_type: str, note: str = ""):
-        # feedback_type: 'like', 'dislike', 'save', 'dismiss'
+    def add_feedback(self, item_id: str, feedback_type: str, reason: str = "", note: str = ""):
+        """
+        Records structured item-level feedback.
+        feedback_type: 'like', 'dislike', 'save', 'unsave', 'irrelevant'
+        reason: 'outside_budget', 'wrong_category', 'poor_recommendation', 'already_own', 'other'
+        """
         now = time.time()
-        if feedback_type in ['like', 'love', 'save']:
+        
+        if feedback_type in ['like', 'love']:
             self.liked_items.add(item_id)
-            if item_id in self.disliked_items:
-                self.disliked_items.remove(item_id)
-        elif feedback_type in ['dislike', 'dismiss', 'hide']:
+            self.disliked_items.discard(item_id)
+        elif feedback_type in ['dislike', 'dismiss', 'hide', 'irrelevant']:
             self.disliked_items.add(item_id)
-            if item_id in self.liked_items:
-                self.liked_items.remove(item_id)
-                
-        self.feedback_log.append({
+            self.liked_items.discard(item_id)
+        elif feedback_type == 'save':
+            self.saved_items.add(item_id)
+            self.liked_items.add(item_id)
+        elif feedback_type == 'unsave':
+            self.saved_items.discard(item_id)
+            
+        record = {
             'item_id': item_id,
             'type': feedback_type,
+            'reason': reason or ('Not specified' if feedback_type == 'dislike' else ''),
             'timestamp': now,
-            'note': note
-        })
+            'note': note or ''
+        }
+        self.feedback_log.append(record)
+        return record
 
     def add_query(self, query: str):
         if query and query.strip():
@@ -87,6 +124,7 @@ class UserMemory:
             'recent_history': self.history[-10:],
             'liked_count': len(self.liked_items),
             'disliked_count': len(self.disliked_items),
+            'saved_count': len(self.saved_items),
             'feedback_events': len(self.feedback_log),
             'decay_factor': self.decay_factor,
             'community_affinity': affinity,

@@ -63,7 +63,7 @@ export const ExplanationModal: React.FC<ExplanationModalProps> = ({
               {item.title}
             </h4>
             <div className="text-[11px] font-bold text-slate-700 mt-0.5">
-              ${item.price.toFixed(2)} • {item.average_rating.toFixed(1)}★ ({item.rating_number} reviews)
+              {item.price != null ? `$${item.price.toFixed(2)}` : 'Price unavailable'} • {item.average_rating.toFixed(1)}★ ({item.rating_number} reviews)
             </div>
           </div>
         </div>

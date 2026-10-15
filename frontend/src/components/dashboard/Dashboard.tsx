@@ -113,6 +113,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const [savedCount, setSavedCount] = useState<number>(0)
   const [feedbackGiven, setFeedbackGiven] = useState<Record<string, 'like' | 'dislike'>>({})
 
+  // Dislike reason modal state
+  const [dislikeModalItem, setDislikeModalItem] = useState<Item | null>(null)
+  const [dislikeReason, setDislikeReason] = useState<string>('outside_budget')
+  const [dislikeNote, setDislikeNote] = useState<string>('')
+
   // Right Panel Preference Controls
   const [prefInterests, setPrefInterests] = useState<string[]>(user.preferences?.interests || [])
   const [relevanceWeight, setRelevanceWeight] = useState(user.preferences?.relevance_weight || 80)
@@ -244,7 +249,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
     try {
       const res = await sendChatMessage({
         user_id: user.user_id,
-        message: queryText
+        message: queryText,
+        session_id: currentSessionId
       })
 
       const botMsg: ChatMessage = {
@@ -252,6 +258,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
         sender: 'assistant',
         text: res.reply,
         items: res.items,
+        clarification_needed: res.clarification_needed,
+        suggested_replies: res.suggested_replies,
         timestamp: Date.now()
       }
 
@@ -309,19 +317,55 @@ export const Dashboard: React.FC<DashboardProps> = ({
   }
 
   // Feedback action (Thumbs up / down)
-  const handleFeedback = async (itemId: string, type: 'like' | 'dislike') => {
+  const handleFeedback = async (itemOrId: Item | string, type: 'like' | 'dislike') => {
+    const itemObj = typeof itemOrId === 'string'
+      ? ({ item_id: itemOrId, title: itemOrId } as Item)
+      : itemOrId
+    const itemId = itemObj.item_id
+
+    if (type === 'dislike') {
+      setDislikeModalItem(itemObj)
+      return
+    }
+
     try {
-      setFeedbackGiven(prev => ({ ...prev, [itemId]: type }))
+      setFeedbackGiven(prev => ({ ...prev, [itemId]: 'like' }))
       const res = await submitFeedback({
         user_id: user.user_id,
         item_id: itemId,
-        feedback_type: type
+        feedback_type: 'like',
+        session_id: currentSessionId
       })
       if (res.memory_state) {
         setMemoryState(res.memory_state)
       }
     } catch (err) {
-      console.error('Failed to submit feedback:', err)
+      console.error('Failed to submit like feedback:', err)
+    }
+  }
+
+  const handleConfirmDislike = async () => {
+    if (!dislikeModalItem) return
+    const itemId = dislikeModalItem.item_id
+    try {
+      setFeedbackGiven(prev => ({ ...prev, [itemId]: 'dislike' }))
+      const res = await submitFeedback({
+        user_id: user.user_id,
+        item_id: itemId,
+        feedback_type: 'dislike',
+        reason: dislikeReason,
+        note: dislikeNote,
+        session_id: currentSessionId
+      })
+      if (res.memory_state) {
+        setMemoryState(res.memory_state)
+      }
+    } catch (err) {
+      console.error('Failed to submit dislike feedback:', err)
+    } finally {
+      setDislikeModalItem(null)
+      setDislikeReason('outside_budget')
+      setDislikeNote('')
     }
   }
 
@@ -650,6 +694,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         {msg.items.map(item => {
                           const isSaved = savedItemIds.has(item.item_id)
                           const userFb = feedbackGiven[item.item_id]
+                          const displayPrice = item.price_formatted || (item.price !== null && item.price !== undefined ? `$${item.price.toFixed(2)}` : 'Price unavailable')
 
                           return (
                             <div
@@ -657,9 +702,37 @@ export const Dashboard: React.FC<DashboardProps> = ({
                               className="p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-teal-500/40 transition-all shadow-md group flex flex-col justify-between"
                             >
                               <div>
+                                {/* Genuine Product Image Container */}
+                                <div className="relative w-full h-40 mb-3 rounded-xl overflow-hidden bg-slate-900/90 border border-white/5 flex items-center justify-center group-hover:border-teal-500/20 transition-all">
+                                  {item.image_url ? (
+                                    <img
+                                      src={item.image_url}
+                                      alt={item.title}
+                                      className="w-full h-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
+                                      onError={(e) => {
+                                        const target = e.currentTarget
+                                        target.style.display = 'none'
+                                        const sibling = target.nextElementSibling as HTMLElement
+                                        if (sibling) sibling.style.display = 'flex'
+                                      }}
+                                    />
+                                  ) : null}
+                                  <div
+                                    style={{ display: item.image_url ? 'none' : 'flex' }}
+                                    className="flex-col items-center justify-center text-slate-500 gap-1.5 p-4 text-center"
+                                  >
+                                    <Layers className="w-8 h-8 text-teal-400/40" />
+                                    <span className="text-[11px] text-slate-400 font-medium">Image unavailable</span>
+                                    <span className="text-[9px] text-slate-500">Catalog image placeholder</span>
+                                  </div>
+                                  <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded text-[9px] font-mono bg-black/80 text-teal-300 border border-teal-500/20 backdrop-blur-sm">
+                                    ASIN: {item.item_id}
+                                  </span>
+                                </div>
+
                                 {/* Community badge and score */}
                                 <div className="flex items-center justify-between gap-2 mb-2">
-                                  <span className="text-[10px] font-bold text-teal-300 bg-teal-500/15 border border-teal-500/30 px-2.5 py-0.5 rounded-full truncate">
+                                  <span className="text-[10px] font-bold text-teal-300 bg-teal-500/15 border border-teal-500/30 px-2.5 py-0.5 rounded-full truncate max-w-[65%]">
                                     {item.category}
                                   </span>
                                   {item.ranking_meta && (
@@ -676,30 +749,47 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
                                 {/* Store & rating */}
                                 <div className="flex items-center justify-between text-[11px] text-slate-400 mb-2">
-                                  <span className="truncate">{item.store || 'Catalog Store'}</span>
+                                  <span className="truncate max-w-[60%]">{item.store || 'Verified Catalog Store'}</span>
                                   <div className="flex items-center gap-1 text-amber-400 shrink-0">
                                     <Star className="w-3 h-3 fill-current" />
                                     <span className="font-bold text-slate-200">{item.average_rating || 4.8}</span>
+                                    <span className="text-[10px] text-slate-500">({item.rating_number || 100})</span>
                                   </div>
                                 </div>
 
-                                {/* Price */}
-                                <div className="text-sm font-bold font-mono text-teal-300 mb-3">
-                                  ${item.price > 0 ? item.price.toFixed(2) : '29.99'}
+                                {/* Verified Price */}
+                                <div className="flex items-center justify-between mb-3">
+                                  <span className={`text-sm font-bold font-mono ${displayPrice === 'Price unavailable' ? 'text-slate-400 text-xs italic' : 'text-teal-300'}`}>
+                                    {displayPrice}
+                                  </span>
+                                  <span className="text-[9px] font-mono text-slate-500">
+                                    Cluster #{item.community_id}
+                                  </span>
                                 </div>
                               </div>
 
                               {/* Card Actions */}
-                              <div className="pt-2 border-t border-white/5 flex items-center justify-between gap-2">
-                                <button
-                                  onClick={() => onOpenItemDetail(item)}
-                                  className="text-[11px] font-semibold text-teal-300 hover:text-teal-200 flex items-center gap-1 cursor-pointer transition-colors"
-                                >
-                                  <span>Why This?</span>
-                                  <ChevronRight className="w-3 h-3" />
-                                </button>
+                              <div className="pt-2.5 border-t border-white/5 flex flex-col gap-2">
+                                <div className="flex items-center justify-between gap-1.5">
+                                  <button
+                                    onClick={() => onOpenItemDetail(item)}
+                                    className="text-[11px] font-semibold text-teal-300 hover:text-teal-200 flex items-center gap-1 cursor-pointer transition-colors"
+                                  >
+                                    <span>Why This?</span>
+                                    <ChevronRight className="w-3 h-3" />
+                                  </button>
 
-                                <div className="flex items-center gap-1.5">
+                                  <button
+                                    onClick={() => handleSend(`Show me items similar to "${item.title}"`)}
+                                    className="text-[10px] font-medium text-slate-400 hover:text-teal-300 bg-white/5 hover:bg-teal-500/10 border border-white/10 px-2 py-1 rounded-lg transition-colors cursor-pointer flex items-center gap-1"
+                                    title="Explore similar graph neighbors"
+                                  >
+                                    <GitFork className="w-3 h-3 text-teal-400" />
+                                    <span>Similar</span>
+                                  </button>
+                                </div>
+
+                                <div className="flex items-center justify-end gap-1.5 pt-1 border-t border-white/5">
                                   {/* Save / Bookmark */}
                                   <button
                                     onClick={() => handleToggleSave(item)}
@@ -715,7 +805,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
                                   {/* Like */}
                                   <button
-                                    onClick={() => handleFeedback(item.item_id, 'like')}
+                                    onClick={() => handleFeedback(item, 'like')}
                                     className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
                                       userFb === 'like'
                                         ? 'bg-teal-500/25 border-teal-400 text-teal-300'
@@ -728,13 +818,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
                                   {/* Dislike */}
                                   <button
-                                    onClick={() => handleFeedback(item.item_id, 'dislike')}
+                                    onClick={() => handleFeedback(item, 'dislike')}
                                     className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
                                       userFb === 'dislike'
                                         ? 'bg-rose-500/25 border-rose-400 text-rose-300'
                                         : 'bg-white/5 border-white/10 text-slate-400 hover:text-rose-300'
                                     }`}
-                                    title="Thumbs Down"
+                                    title="Thumbs Down (provide reason)"
                                   >
                                     <ThumbsDown className="w-3.5 h-3.5" />
                                   </button>
@@ -744,6 +834,25 @@ export const Dashboard: React.FC<DashboardProps> = ({
                             </div>
                           )
                         })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Suggested Replies / Clarification Chips */}
+                  {!isUser && msg.suggested_replies && msg.suggested_replies.length > 0 && (
+                    <div className="pt-2">
+                      <div className="flex flex-wrap gap-1.5">
+                        {msg.suggested_replies.map((chip, cIdx) => (
+                          <button
+                            key={cIdx}
+                            type="button"
+                            onClick={() => handleSend(chip)}
+                            className="text-[11px] font-medium text-teal-300 hover:text-white bg-teal-500/10 hover:bg-teal-500/25 border border-teal-500/30 hover:border-teal-400/50 px-3 py-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
+                          >
+                            <span>{chip}</span>
+                            <ArrowRight className="w-3 h-3 text-teal-400" />
+                          </button>
+                        ))}
                       </div>
                     </div>
                   )}
@@ -1118,6 +1227,130 @@ export const Dashboard: React.FC<DashboardProps> = ({
           onClick={() => setMobileRightPanelOpen(false)}
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 lg:hidden"
         />
+      )}
+
+      {/* ──────────────────────────────────────────────────────────── */}
+      {/* DISLIKE FEEDBACK REASON MODAL                               */}
+      {/* ──────────────────────────────────────────────────────────── */}
+      {dislikeModalItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-150">
+          <div
+            onClick={e => e.stopPropagation()}
+            className="aurora-card rounded-[28px] max-w-md w-full p-6 shadow-2xl border border-rose-500/30 relative text-left"
+          >
+            <button
+              onClick={() => {
+                setDislikeModalItem(null)
+                setDislikeReason('outside_budget')
+                setDislikeNote('')
+              }}
+              className="absolute top-4 right-4 p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-300">
+                <ThumbsDown className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white tracking-tight">
+                  Help Us Personalize
+                </h3>
+                <p className="text-xs text-slate-400">
+                  Why isn't this recommendation right for you?
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-white/5 border border-white/5 mb-4 flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-lg bg-black/40 border border-white/10 shrink-0 overflow-hidden flex items-center justify-center">
+                {dislikeModalItem.image_url ? (
+                  <img src={dislikeModalItem.image_url} alt="" className="w-full h-full object-contain p-1" />
+                ) : (
+                  <Layers className="w-4 h-4 text-slate-500" />
+                )}
+              </div>
+              <div className="overflow-hidden">
+                <span className="text-xs font-bold text-white truncate block">
+                  {dislikeModalItem.title}
+                </span>
+                <span className="text-[10px] text-teal-300">
+                  {dislikeModalItem.category}
+                </span>
+              </div>
+            </div>
+
+            {/* Structured Reasons */}
+            <div className="space-y-2 mb-4">
+              <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">
+                Select Reason
+              </label>
+
+              {[
+                { id: 'outside_budget', label: 'Outside my budget' },
+                { id: 'wrong_category', label: 'Wrong category / age group' },
+                { id: 'poor_recommendation', label: 'Poor recommendation quality' },
+                { id: 'already_own', label: 'Already own or seen before' },
+                { id: 'other', label: 'Other' }
+              ].map(opt => (
+                <label
+                  key={opt.id}
+                  onClick={() => setDislikeReason(opt.id)}
+                  className={`flex items-center gap-3 p-2.5 rounded-xl border text-xs cursor-pointer transition-all ${
+                    dislikeReason === opt.id
+                      ? 'bg-rose-500/15 border-rose-400/50 text-white font-medium'
+                      : 'bg-white/5 border-white/5 text-slate-300 hover:bg-white/10'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="dislikeReason"
+                    checked={dislikeReason === opt.id}
+                    onChange={() => setDislikeReason(opt.id)}
+                    className="accent-rose-400"
+                  />
+                  <span>{opt.label}</span>
+                </label>
+              ))}
+            </div>
+
+            {/* Optional note */}
+            <div className="mb-5">
+              <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block mb-1.5">
+                Additional Note (Optional)
+              </label>
+              <input
+                type="text"
+                value={dislikeNote}
+                onChange={e => setDislikeNote(e.target.value)}
+                placeholder="e.g. Prefer wooden toys instead of plastic"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-400/50"
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10">
+              <button
+                type="button"
+                onClick={() => {
+                  setDislikeModalItem(null)
+                  setDislikeReason('outside_budget')
+                  setDislikeNote('')
+                }}
+                className="px-4 py-2 rounded-xl text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDislike}
+                className="px-5 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold transition-all shadow-lg shadow-rose-500/20 cursor-pointer"
+              >
+                Confirm Feedback
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
     </div>

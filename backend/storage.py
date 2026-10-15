@@ -23,6 +23,7 @@ class PersistentStore:
             "email_to_id": {},   # email -> user_id
             "saved_items": {},   # user_id -> list of item_ids
             "chat_sessions": {}, # user_id -> list of session_dicts
+            "feedback": {},      # user_id -> list of feedback_dicts
         }
         self._load()
         self._seed_demo_accounts()
@@ -283,3 +284,18 @@ class PersistentStore:
             self._save()
             return True
         return False
+
+    # Feedback Log
+    def add_user_feedback(self, user_id: str, record: Dict[str, Any]):
+        if "feedback" not in self.data:
+            self.data["feedback"] = {}
+        if user_id not in self.data["feedback"]:
+            self.data["feedback"][user_id] = []
+        self.data["feedback"][user_id].append(record)
+        self._save()
+
+    def get_user_feedback(self, user_id: str) -> List[Dict[str, Any]]:
+        if "feedback" not in self.data:
+            return []
+        return self.data["feedback"].get(user_id, [])
+

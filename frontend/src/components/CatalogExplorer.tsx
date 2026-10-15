@@ -132,7 +132,7 @@ export const CatalogExplorer: React.FC<CatalogExplorerProps> = ({
                   <div>
                     <div className="flex items-center justify-between text-[10px] text-teal-400 mb-1.5 font-mono">
                       <span>Cluster #{item.community_id}</span>
-                      <span className="font-bold text-white">${item.price > 0 ? item.price.toFixed(2) : '24.99'}</span>
+                      <span className="font-bold text-white">{item.price_formatted || (item.price != null ? `$${item.price.toFixed(2)}` : 'Price unavailable')}</span>
                     </div>
                     <h4 className="text-xs font-bold text-white group-hover:text-teal-300 transition-colors line-clamp-2 mb-2 leading-snug">
                       {item.title}

@@ -10,7 +10,9 @@ export interface Explanation {
   primary_reason: string;
   community_context: string;
   graph_path: string;
-  recency_reason: string;
+  recency_reason?: string;
+  matching_attributes?: string[];
+  limitations?: string;
   trust_badge: string;
   average_rating: number;
   rating_count: number;
@@ -21,10 +23,13 @@ export interface Item {
   item_id: string;
   title: string;
   category: string;
+  cluster_name?: string;
   store: string;
   average_rating: number;
   rating_number: number;
-  price: number;
+  price: number | null;
+  price_formatted?: string;
+  image_url?: string | null;
   community_id: number;
   popularity: number;
   degree?: number;
@@ -69,6 +74,50 @@ export interface ChatMessage {
   text: string;
   timestamp: number;
   items?: Item[];
+  clarification_needed?: boolean;
+  suggested_replies?: string[];
+}
+
+export interface FeedbackRecord {
+  item_id: string;
+  title: string;
+  category: string;
+  community_id: number;
+  community_name?: string;
+  image_url?: string;
+  type: 'like' | 'dislike' | 'save' | 'unsave' | 'irrelevant';
+  reason?: string;
+  note?: string;
+  timestamp: number;
+}
+
+export interface BenchmarkMetrics {
+  "HR@5": number;
+  "HR@10": number;
+  "NDCG@5": number;
+  "NDCG@10": number;
+  "Comm_ILD@10": number;
+  "Latency_ms": number;
+}
+
+export interface AblationItem {
+  configuration: string;
+  hr_10: number;
+  ndcg_10: number;
+  comm_ild_10: number;
+  diversity_delta?: string;
+  description: string;
+}
+
+export interface EvaluationData {
+  dataset: string;
+  catalog_items: number;
+  graph_edges: number;
+  communities: number;
+  modularity_q: number;
+  benchmarks: Record<string, BenchmarkMetrics>;
+  ablation_study: AblationItem[];
+  key_takeaways: string[];
 }
 
 export interface ChatSessionSummary {

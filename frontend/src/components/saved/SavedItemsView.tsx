@@ -10,14 +10,21 @@ import {
   ShieldCheck,
   RefreshCw,
   Sparkles,
-  Search
+  Search,
+  ThumbsUp,
+  ThumbsDown,
+  Layers,
+  History,
+  Clock,
+  Tag
 } from 'lucide-react'
-import { UserProfile, Item, ChatSessionSummary } from '../../types'
+import { UserProfile, Item, ChatSessionSummary, FeedbackRecord } from '../../types'
 import {
   fetchSavedItems,
   toggleSavedItem,
   fetchChatSessions,
-  deleteChatSession
+  deleteChatSession,
+  fetchUserFeedback
 } from '../../api'
 
 interface SavedItemsViewProps {
@@ -33,9 +40,11 @@ export const SavedItemsView: React.FC<SavedItemsViewProps> = ({
   onResumeChat,
   onOpenItemDetail
 }) => {
-  const [activeTab, setActiveTab] = useState<'saved' | 'history'>('saved')
+  const [activeTab, setActiveTab] = useState<'saved' | 'history' | 'feedback'>('saved')
   const [savedItems, setSavedItems] = useState<Item[]>([])
   const [chatSessions, setChatSessions] = useState<ChatSessionSummary[]>([])
+  const [feedbackHistory, setFeedbackHistory] = useState<FeedbackRecord[]>([])
+  const [feedbackStats, setFeedbackStats] = useState({ total: 0, liked: 0, disliked: 0, saved: 0 })
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -46,12 +55,20 @@ export const SavedItemsView: React.FC<SavedItemsViewProps> = ({
   const loadData = async () => {
     setLoading(true)
     try {
-      const [savedRes, sessionsRes] = await Promise.all([
+      const [savedRes, sessionsRes, feedbackRes] = await Promise.all([
         fetchSavedItems(user.user_id),
-        fetchChatSessions(user.user_id)
+        fetchChatSessions(user.user_id),
+        fetchUserFeedback(user.user_id).catch(() => ({ total_feedback: 0, feedback_history: [], liked_count: 0, disliked_count: 0, saved_count: 0 }))
       ])
       setSavedItems(savedRes.items || [])
       setChatSessions(sessionsRes || [])
+      setFeedbackHistory(feedbackRes.feedback_history || [])
+      setFeedbackStats({
+        total: feedbackRes.total_feedback || 0,
+        liked: feedbackRes.liked_count || 0,
+        disliked: feedbackRes.disliked_count || 0,
+        saved: feedbackRes.saved_count || 0
+      })
     } catch (err) {
       console.error('Failed to load saved items & history:', err)
     } finally {
@@ -128,6 +145,17 @@ export const SavedItemsView: React.FC<SavedItemsViewProps> = ({
               <MessageSquare className="w-3.5 h-3.5" />
               <span>Past Conversations ({chatSessions.length})</span>
             </button>
+            <button
+              onClick={() => setActiveTab('feedback')}
+              className={`px-4 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-2 ${
+                activeTab === 'feedback'
+                  ? 'bg-teal-500/20 text-teal-300 border border-teal-400/40 shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <ThumbsUp className="w-3.5 h-3.5" />
+              <span>Feedback Log ({feedbackHistory.length})</span>
+            </button>
           </div>
         </div>
 
@@ -135,12 +163,18 @@ export const SavedItemsView: React.FC<SavedItemsViewProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              {activeTab === 'saved' ? 'Your Saved Recommendations' : 'Conversation History'}
+              {activeTab === 'saved'
+                ? 'Your Saved Recommendations'
+                : activeTab === 'history'
+                ? 'Conversation History'
+                : 'Observable Feedback & Preference Memory'}
             </h1>
             <p className="text-xs sm:text-sm text-slate-400 mt-1">
               {activeTab === 'saved'
                 ? 'Items you bookmarked during conversational discovery sessions with GraphRAG.'
-                : 'Review past chat sessions, re-inspect previous suggestions, or resume recommendations.'}
+                : activeTab === 'history'
+                ? 'Review past chat sessions, re-inspect previous suggestions, or resume recommendations.'
+                : 'Track all item-level feedback events, structured rejection reasons, and active dynamic memory weights.'}
             </p>
           </div>
 
@@ -182,57 +216,87 @@ export const SavedItemsView: React.FC<SavedItemsViewProps> = ({
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredItems.map(item => (
-                  <div
-                    key={item.item_id}
-                    onClick={() => onOpenItemDetail(item)}
-                    className="p-5 rounded-3xl aurora-card border border-white/10 hover:border-teal-500/40 transition-all cursor-pointer flex flex-col justify-between group shadow-lg"
-                  >
-                    <div>
-                      {/* Top Category Badge & Remove Button */}
-                      <div className="flex items-center justify-between gap-2 mb-3">
-                        <span className="text-[10px] font-bold text-teal-300 bg-teal-500/15 border border-teal-500/30 px-2.5 py-0.5 rounded-full truncate">
-                          {item.category}
-                        </span>
-                        
-                        <button
-                          type="button"
-                          onClick={e => handleRemoveSaved(e, item)}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
-                          title="Remove from saved"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
+                {filteredItems.map(item => {
+                  const displayPrice = item.price_formatted || (item.price !== null && item.price !== undefined ? `$${item.price.toFixed(2)}` : 'Price unavailable')
+                  return (
+                    <div
+                      key={item.item_id}
+                      onClick={() => onOpenItemDetail(item)}
+                      className="p-5 rounded-3xl aurora-card border border-white/10 hover:border-teal-500/40 transition-all cursor-pointer flex flex-col justify-between group shadow-lg"
+                    >
+                      <div>
+                        {/* Image Container */}
+                        <div className="relative w-full h-36 mb-3 rounded-2xl overflow-hidden bg-slate-900/90 border border-white/5 flex items-center justify-center p-2">
+                          {item.image_url ? (
+                            <img
+                              src={item.image_url}
+                              alt={item.title}
+                              className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                              onError={(e) => {
+                                const target = e.currentTarget
+                                target.style.display = 'none'
+                                const sibling = target.nextElementSibling as HTMLElement
+                                if (sibling) sibling.style.display = 'flex'
+                              }}
+                            />
+                          ) : null}
+                          <div
+                            style={{ display: item.image_url ? 'none' : 'flex' }}
+                            className="flex-col items-center justify-center text-slate-500 gap-1 text-center"
+                          >
+                            <Layers className="w-6 h-6 text-teal-400/40" />
+                            <span className="text-[10px] text-slate-400">Image unavailable</span>
+                          </div>
+                          <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded text-[9px] font-mono bg-black/80 text-teal-300 border border-teal-500/20 backdrop-blur-sm">
+                            ASIN: {item.item_id}
+                          </span>
+                        </div>
 
-                      {/* Title */}
-                      <h4 className="text-xs sm:text-sm font-bold text-white group-hover:text-teal-200 transition-colors line-clamp-2 leading-snug mb-2">
-                        {item.title}
-                      </h4>
+                        {/* Top Category Badge & Remove Button */}
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          <span className="text-[10px] font-bold text-teal-300 bg-teal-500/15 border border-teal-500/30 px-2.5 py-0.5 rounded-full truncate max-w-[75%]">
+                            {item.category}
+                          </span>
+                          
+                          <button
+                            type="button"
+                            onClick={e => handleRemoveSaved(e, item)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                            title="Remove from saved"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
 
-                      {/* Store & Rating */}
-                      <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
-                        <span className="truncate">{item.store || 'Verified Store'}</span>
-                        <div className="flex items-center gap-1 text-amber-400 shrink-0">
-                          <Star className="w-3.5 h-3.5 fill-current" />
-                          <span className="font-bold text-slate-200">{item.average_rating || 4.8}</span>
+                        {/* Title */}
+                        <h4 className="text-xs sm:text-sm font-bold text-white group-hover:text-teal-200 transition-colors line-clamp-2 leading-snug mb-2">
+                          {item.title}
+                        </h4>
+
+                        {/* Store & Rating */}
+                        <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
+                          <span className="truncate max-w-[60%]">{item.store || 'Verified Catalog Store'}</span>
+                          <div className="flex items-center gap-1 text-amber-400 shrink-0">
+                            <Star className="w-3.5 h-3.5 fill-current" />
+                            <span className="font-bold text-slate-200">{item.average_rating || 4.8}</span>
+                          </div>
+                        </div>
+
+                        {/* Price */}
+                        <div className={`text-base font-bold font-mono mb-4 ${displayPrice === 'Price unavailable' ? 'text-slate-400 text-xs italic' : 'text-teal-300'}`}>
+                          {displayPrice}
                         </div>
                       </div>
 
-                      {/* Price */}
-                      <div className="text-base font-bold font-mono text-teal-300 mb-4">
-                        ${item.price > 0 ? item.price.toFixed(2) : '34.99'}
+                      {/* Footer Info */}
+                      <div className="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-teal-300 font-semibold">
+                        <span>View Graph Details</span>
+                        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </div>
-                    </div>
 
-                    {/* Footer Info */}
-                    <div className="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-teal-300 font-semibold">
-                      <span>View Graph Details</span>
-                      <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>
-
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )}
           </div>
@@ -297,6 +361,110 @@ export const SavedItemsView: React.FC<SavedItemsViewProps> = ({
 
                   </div>
                 ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── TAB 3: FEEDBACK LOG & PREFERENCE MEMORY ── */}
+        {activeTab === 'feedback' && (
+          <div className="space-y-6">
+            {/* Stat Counters */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
+                <span className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">Total Actions</span>
+                <span className="text-xl font-bold font-mono text-white">{feedbackStats.total}</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-teal-500/10 border border-teal-500/20">
+                <span className="text-[10px] text-teal-300 uppercase tracking-wider block mb-1">Liked (+50% Boost)</span>
+                <span className="text-xl font-bold font-mono text-teal-300">{feedbackStats.liked}</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
+                <span className="text-[10px] text-rose-300 uppercase tracking-wider block mb-1">Disliked (Filtered)</span>
+                <span className="text-xl font-bold font-mono text-rose-300">{feedbackStats.disliked}</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/20">
+                <span className="text-[10px] text-cyan-300 uppercase tracking-wider block mb-1">Recency Decay (α)</span>
+                <span className="text-xl font-bold font-mono text-cyan-300">0.85</span>
+              </div>
+            </div>
+
+            {/* Feedback List */}
+            {feedbackHistory.length === 0 ? (
+              <div className="aurora-card rounded-3xl p-12 text-center border border-white/10 max-w-lg mx-auto">
+                <ThumbsUp className="w-10 h-10 text-teal-400/50 mx-auto mb-3" />
+                <h3 className="text-base font-bold text-white mb-1">No Feedback Recorded Yet</h3>
+                <p className="text-xs text-slate-400 leading-relaxed mb-6">
+                  Like or dislike recommendations in chat to train your dynamic preference memory and inspect your logged feedback here.
+                </p>
+                <button
+                  onClick={onBack}
+                  className="aurora-btn-glow px-5 py-2.5 rounded-full text-xs font-bold text-white transition-all hover:scale-105 cursor-pointer"
+                >
+                  Start Exploring & Providing Feedback
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {feedbackHistory.map((fb, idx) => {
+                  const isLike = fb.type === 'like' || fb.type === 'save'
+                  return (
+                    <div
+                      key={idx}
+                      className="p-4 sm:p-5 rounded-2xl aurora-card border border-white/10 hover:border-teal-500/30 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                    >
+                      <div className="flex items-center gap-3.5 overflow-hidden">
+                        {/* Type Icon */}
+                        <div
+                          className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                            isLike
+                              ? 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
+                              : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                          }`}
+                        >
+                          {isLike ? <ThumbsUp className="w-5 h-5" /> : <ThumbsDown className="w-5 h-5" />}
+                        </div>
+
+                        <div className="overflow-hidden">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <span
+                              className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                                isLike
+                                  ? 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
+                                  : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                              }`}
+                            >
+                              {fb.type.toUpperCase()}
+                            </span>
+                            {fb.reason && (
+                              <span className="text-[10px] font-medium text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full">
+                                Reason: {fb.reason.replace(/_/g, ' ')}
+                              </span>
+                            )}
+                            <span className="text-[10px] text-slate-500 font-mono">
+                              Cluster #{fb.community_id}
+                            </span>
+                          </div>
+
+                          <h4 className="text-xs sm:text-sm font-bold text-white truncate max-w-lg">
+                            {fb.title || `Item ${fb.item_id}`}
+                          </h4>
+
+                          {fb.note && (
+                            <p className="text-[11px] text-slate-400 italic mt-0.5">
+                              "{fb.note}"
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3 text-[11px] text-slate-400 shrink-0 self-end sm:self-center font-mono">
+                        <Clock className="w-3.5 h-3.5 text-slate-500" />
+                        <span>{new Date(fb.timestamp * 1000).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             )}
           </div>

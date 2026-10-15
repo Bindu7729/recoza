@@ -136,7 +136,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         {/* Price & Why Button */}
                         <div className="flex items-center justify-between mt-1">
                           <span className="text-xs font-extrabold text-slate-900">
-                            ${item.price.toFixed(2)}
+                            {item.price_formatted || (item.price != null ? `$${item.price.toFixed(2)}` : 'Price unavailable')}
                           </span>
                           <button
                             onClick={(e) => {

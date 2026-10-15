@@ -117,7 +117,7 @@ export const RecommendationPreview: React.FC<RecommendationPreviewProps> = ({
                     </div>
                     <span>•</span>
                     <span className="font-mono text-teal-300 font-bold text-sm">
-                      ${item.price > 0 ? item.price.toFixed(2) : '34.99'}
+                      {item.price_formatted || (item.price != null ? `$${item.price.toFixed(2)}` : 'Price unavailable')}
                     </span>
                   </div>
 

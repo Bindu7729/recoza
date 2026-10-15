@@ -186,7 +186,7 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({
                                 {item.category}
                               </span>
                               <span className="text-xs font-black text-slate-900">
-                                ${item.price.toFixed(2)}
+                                {item.price_formatted || (item.price != null ? `$${item.price.toFixed(2)}` : 'Price unavailable')}
                               </span>
                             </div>
 

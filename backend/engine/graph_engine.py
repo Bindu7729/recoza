@@ -10,6 +10,23 @@ from collections import defaultdict
 import pandas as pd
 import networkx as nx
 
+COMMUNITY_NAMES = {
+    0: "Building & Construction Sets",
+    1: "Puzzles & Family Board Games",
+    2: "STEM & Learning Toys",
+    3: "Arts & Creative Crafts",
+    4: "Pretend Play & Dolls",
+    5: "Vehicles & Action Playsets",
+    6: "Outdoor & Active Play",
+    7: "Novelty & Gag Toys",
+    8: "Card Games & Collectibles",
+    9: "Infant & Toddler Toys",
+    10: "Musical & Sound Toys",
+    11: "Electronic & Interactive Toys",
+    12: "Costumes & Roleplay Accessories",
+    13: "Model Kits & Hobbies"
+}
+
 class GraphEngine:
     def __init__(self, data_dir: str):
         self.data_dir = data_dir
@@ -95,14 +112,27 @@ class GraphEngine:
     def get_item(self, item_id: str) -> dict:
         meta = self.items_meta.get(item_id, {})
         cid = self.item_to_comm.get(item_id, -1)
+        cluster_name = COMMUNITY_NAMES.get(cid, "General Toys & Games")
+        
+        # Genuine price from dataset if present, else None
+        raw_price = meta.get('price', None)
+        price_val = float(raw_price) if raw_price is not None and str(raw_price).strip() != '' else None
+        price_formatted = f"${price_val:.2f}" if price_val is not None else "Price unavailable"
+        
+        # Genuine Amazon ASIN image CDN URL
+        image_url = meta.get('image', meta.get('image_url', f"https://images-na.ssl-images-amazon.com/images/P/{item_id}.01._SX300_SCLZZZZZZZ_.jpg"))
+        
         return {
             'item_id': item_id,
             'title': meta.get('title', f"Toy Item {item_id}"),
-            'category': meta.get('category', 'Toys & Games'),
-            'store': meta.get('store', 'Unknown'),
+            'category': cluster_name if meta.get('category') in ['Toys & Games', None] else meta.get('category'),
+            'cluster_name': cluster_name,
+            'store': meta.get('store', 'Verified Catalog Store'),
             'average_rating': meta.get('average_rating', 4.5),
             'rating_number': meta.get('rating_number', 100),
-            'price': meta.get('price', round(14.99 + (hash(item_id) % 8500) / 100.0, 2)),
+            'price': price_val,
+            'price_formatted': price_formatted,
+            'image_url': image_url,
             'community_id': cid,
             'popularity': self.item_pop.get(item_id, 0),
             'degree': self.item_graph.degree(item_id) if self.item_graph.has_node(item_id) else 0
@@ -118,30 +148,57 @@ class GraphEngine:
         neighbors.sort(key=lambda x: x[1], reverse=True)
         return [self.get_item(nbr) for nbr, _ in neighbors[:limit]]
 
-    def search_items(self, query: str = "", category: str = None, community_id: int = None, min_rating: float = 0.0, limit: int = 20, offset: int = 0) -> dict:
+    def search_items(self, query: str = "", category: str = None, community_id: int = None, min_rating: float = 0.0, max_price: float = None, limit: int = 20, offset: int = 0) -> dict:
         results = []
         q_lower = query.lower().strip() if query else ""
+        q_tokens = [w for w in q_lower.split() if len(w) > 2] if q_lower else []
         
         for item_id, meta in self.items_meta.items():
             title = meta.get('title', '').lower()
-            cat = meta.get('category', '')
             store = meta.get('store', '').lower()
-            rating = meta.get('average_rating', 0.0)
+            cat = meta.get('category', '').lower()
             cid = self.item_to_comm.get(item_id, -1)
+            cluster_name = COMMUNITY_NAMES.get(cid, '').lower()
+            rating = meta.get('average_rating', 0.0)
             
-            if q_lower and (q_lower not in title and q_lower not in store and q_lower not in cat.lower()):
-                continue
-            if category and category.lower() != 'all' and category.lower() not in cat.lower():
-                continue
+            # Text matching score
+            match_score = 0
+            if q_tokens:
+                combined_text = f"{title} {store} {cat} {cluster_name}"
+                matched_tokens = sum(1 for tok in q_tokens if tok in combined_text)
+                if matched_tokens == 0:
+                    continue
+                match_score = matched_tokens / len(q_tokens)
+            elif q_lower:
+                combined_text = f"{title} {store} {cat} {cluster_name}"
+                if q_lower not in combined_text:
+                    continue
+                match_score = 1.0
+
+            # Filter by category/cluster if provided
+            if category and category.lower() != 'all':
+                c_low = category.lower()
+                if c_low not in cat and c_low not in cluster_name:
+                    continue
+                    
             if community_id is not None and cid != community_id:
                 continue
+                
             if rating < min_rating:
                 continue
                 
-            results.append(self.get_item(item_id))
+            # Filter by max price if specified and item has price
+            raw_p = meta.get('price', None)
+            if max_price is not None and raw_p is not None:
+                if float(raw_p) > max_price:
+                    continue
+
+            it_data = self.get_item(item_id)
+            it_data['text_match_score'] = match_score
+            results.append(it_data)
             
-        # Sort by popularity descending
-        results.sort(key=lambda x: (x['popularity'], x['average_rating']), reverse=True)
+        # Sort by match_score first, then popularity, then rating
+        results.sort(key=lambda x: (x.get('text_match_score', 0), x['popularity'], x['average_rating']), reverse=True)
         total = len(results)
         paginated = results[offset: offset + limit]
         
