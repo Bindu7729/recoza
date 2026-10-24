@@ -26,6 +26,7 @@ export function App() {
   const [savedItemIds, setSavedItemIds] = useState<Set<string>>(new Set())
   const [settingsModalOpen, setSettingsModalOpen] = useState(false)
   const [initialLoading, setInitialLoading] = useState(true)
+  const [initialPrompt, setInitialPrompt] = useState<string>('')
 
   // 1. Check local session on initial mount
   useEffect(() => {
@@ -54,7 +55,10 @@ export function App() {
   }, [])
 
   // Navigation handlers
-  const handleGetStarted = () => {
+  const handleGetStarted = (promptText?: string) => {
+    if (promptText) {
+      setInitialPrompt(promptText)
+    }
     if (currentUser) {
       if (currentUser.is_first_time) {
         setCurrentView('onboarding')
@@ -146,6 +150,8 @@ export function App() {
       <>
         <Dashboard
           user={currentUser}
+          initialPrompt={initialPrompt}
+          onClearInitialPrompt={() => setInitialPrompt('')}
           onLogout={handleLogout}
           onNavigate={(view) => {
             if (view === 'preferences') setCurrentView('preferences')
@@ -288,7 +294,7 @@ export function App() {
         {/* ── Section 2: Hero Section & Conversational Recommendation Preview (2-Column Desktop) ── */}
         <Hero
           onDiscover={(queryText) => {
-            handleGetStarted()
+            handleGetStarted(queryText)
           }}
           onExploreHowItWorks={() => {
             const el = document.getElementById('how-it-works')

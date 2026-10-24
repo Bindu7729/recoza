@@ -5,6 +5,7 @@ Louvain community clusters, collaborative filtering similarity,
 and metadata querying.
 """
 import os
+import re
 import json
 from collections import defaultdict
 import pandas as pd
@@ -26,6 +27,24 @@ COMMUNITY_NAMES = {
     12: "Costumes & Roleplay Accessories",
     13: "Model Kits & Hobbies"
 }
+
+GAME_TITLE_PAT = re.compile(
+    r'\b(game|games|boardgame|board game|card game|tabletop|puzzle|puzzles|jigsaw|dice|deck|catan|monopoly|uno|farkle|chess|checkers|trivia|dominoes|balancing|shaky tower|strategy game)\b',
+    re.IGNORECASE
+)
+GAME_STORES = {'ravensburger', 'epoch games', 'mattel games', 'hasbro gaming', 'thinkfun', 'banana panda', 'spin master games', 'pressman'}
+NON_GAME_PAT = re.compile(
+    r'\b(doll|barbie|plush|stuffed animal|monster truck|hot wheels|vehicle|truck|die-cast|baby|infant|teether|rattle|pool float|swimways|costume|cape|dress up)\b',
+    re.IGNORECASE
+)
+BUILDING_PAT = re.compile(
+    r'\b(build|building|lego|brick|bricks|block|blocks|construct|construction|technic|mega bloks|magnetic tiles|mind-building|model kit|stacking|tower|sorter blocks)\b',
+    re.IGNORECASE
+)
+EDU_PAT = re.compile(
+    r'\b(stem|science|robot|robotics|learn|learning|educat|educational|coding|microscope|circuit|planetarium|math|alphabet|chemistry|engineering|experiment|discovery)\b',
+    re.IGNORECASE
+)
 
 class GraphEngine:
     def __init__(self, data_dir: str):
@@ -109,6 +128,43 @@ class GraphEngine:
                     
         self.num_edges = self.item_graph.number_of_edges()
 
+    def is_game(self, item_id_or_meta) -> bool:
+        meta = item_id_or_meta if isinstance(item_id_or_meta, dict) else self.items_meta.get(item_id_or_meta, {})
+        title = meta.get('title', '')
+        store = meta.get('store', '').lower()
+        if NON_GAME_PAT.search(title):
+            return False
+        if store in GAME_STORES:
+            return True
+        if GAME_TITLE_PAT.search(title):
+            return True
+        return False
+
+    def is_toy(self, item_id_or_meta) -> bool:
+        meta = item_id_or_meta if isinstance(item_id_or_meta, dict) else self.items_meta.get(item_id_or_meta, {})
+        title = meta.get('title', '')
+        # Pure tabletop card/board games without physical toy elements
+        if re.search(r'\b(board game|card game|dice-rolling game|deck of cards|dnd dice|metal dice)\b', title, re.IGNORECASE):
+            return False
+        return True
+
+    def is_building(self, item_id_or_meta) -> bool:
+        meta = item_id_or_meta if isinstance(item_id_or_meta, dict) else self.items_meta.get(item_id_or_meta, {})
+        title = meta.get('title', '')
+        store = meta.get('store', '')
+        text = f"{title} {store}"
+        return bool(BUILDING_PAT.search(text))
+
+    def is_educational(self, item_id_or_meta) -> bool:
+        meta = item_id_or_meta if isinstance(item_id_or_meta, dict) else self.items_meta.get(item_id_or_meta, {})
+        title = meta.get('title', '')
+        store = meta.get('store', '')
+        text = f"{title} {store}"
+        return bool(EDU_PAT.search(text))
+
+    def get_game_items(self) -> list:
+        return [it for it in self.items_meta if self.is_game(it)]
+
     def get_item(self, item_id: str) -> dict:
         meta = self.items_meta.get(item_id, {})
         cid = self.item_to_comm.get(item_id, -1)
@@ -135,7 +191,11 @@ class GraphEngine:
             'image_url': image_url,
             'community_id': cid,
             'popularity': self.item_pop.get(item_id, 0),
-            'degree': self.item_graph.degree(item_id) if self.item_graph.has_node(item_id) else 0
+            'degree': self.item_graph.degree(item_id) if self.item_graph.has_node(item_id) else 0,
+            'is_game': self.is_game(meta),
+            'is_toy': self.is_toy(meta),
+            'is_building': self.is_building(meta),
+            'is_educational': self.is_educational(meta)
         }
 
     def get_neighbors(self, item_id: str, limit: int = 6) -> list:
@@ -148,29 +208,58 @@ class GraphEngine:
         neighbors.sort(key=lambda x: x[1], reverse=True)
         return [self.get_item(nbr) for nbr, _ in neighbors[:limit]]
 
-    def search_items(self, query: str = "", category: str = None, community_id: int = None, min_rating: float = 0.0, max_price: float = None, limit: int = 20, offset: int = 0) -> dict:
+    def search_items(
+        self,
+        query: str = "",
+        category: str = None,
+        community_id: int = None,
+        min_rating: float = 0.0,
+        max_price: float = None,
+        limit: int = 20,
+        offset: int = 0,
+        domain_type: str = None,
+        is_educational: bool = False,
+        is_building: bool = False
+    ) -> dict:
         results = []
         q_lower = query.lower().strip() if query else ""
-        q_tokens = [w for w in q_lower.split() if len(w) > 2] if q_lower else []
+        # Filter out common stop words to keep substantive search tokens
+        stop_words = {'recommend', 'show', 'please', 'find', 'give', 'best', 'some', 'with', 'under', 'from', 'what', 'have', 'only', 'want', 'need'}
+        q_tokens = [w for w in re.findall(r'\b[a-zA-Z]{3,}\b', q_lower) if w not in stop_words] if q_lower else []
         
         for item_id, meta in self.items_meta.items():
             title = meta.get('title', '').lower()
             store = meta.get('store', '').lower()
-            cat = meta.get('category', '').lower()
             cid = self.item_to_comm.get(item_id, -1)
             cluster_name = COMMUNITY_NAMES.get(cid, '').lower()
             rating = meta.get('average_rating', 0.0)
             
-            # Text matching score
+            # Domain-level filtering
+            if domain_type == 'games' and not self.is_game(meta):
+                continue
+            elif domain_type == 'toys' and not self.is_toy(meta):
+                continue
+                
+            if is_building and not self.is_building(meta):
+                # allow puzzle / balancing games if building game is requested
+                if domain_type == 'games' and any(w in title for w in ['tower', 'stack', 'balanc', 'puzzle', 'block', 'construct']):
+                    pass
+                else:
+                    continue
+                    
+            if is_educational and not self.is_educational(meta):
+                continue
+
+            # Text matching score: exclude generic 'Toys & Games' string to prevent false positive matches
             match_score = 0
+            combined_text = f"{title} {store} {cluster_name}"
+            
             if q_tokens:
-                combined_text = f"{title} {store} {cat} {cluster_name}"
                 matched_tokens = sum(1 for tok in q_tokens if tok in combined_text)
                 if matched_tokens == 0:
                     continue
                 match_score = matched_tokens / len(q_tokens)
             elif q_lower:
-                combined_text = f"{title} {store} {cat} {cluster_name}"
                 if q_lower not in combined_text:
                     continue
                 match_score = 1.0
@@ -178,7 +267,7 @@ class GraphEngine:
             # Filter by category/cluster if provided
             if category and category.lower() != 'all':
                 c_low = category.lower()
-                if c_low not in cat and c_low not in cluster_name:
+                if c_low not in cluster_name:
                     continue
                     
             if community_id is not None and cid != community_id:

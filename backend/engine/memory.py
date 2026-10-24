@@ -21,7 +21,11 @@ class UserMemory:
         # Short-term session preferences (separated from persistent profile preferences)
         self.session_states = defaultdict(lambda: {
             'last_recommended_items': [],
+            'domain_type': None,
             'category_constraint': None,
+            'is_educational': False,
+            'is_building': False,
+            'requested_count': 4,
             'max_budget': None,
             'min_rating': 0.0,
             'exclusions': set(),

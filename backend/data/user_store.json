@@ -96,13 +96,37 @@
           100
         ]
       }
+    },
+    "user_ca05b15e8a": {
+      "user_id": "user_ca05b15e8a",
+      "name": "bindu",
+      "email": "pbibinduamb@gmail.com",
+      "password_hash": "68c89e93af788ba5baceecd1d2ce2adf168c548b79047ade345915085cbd360c",
+      "is_first_time": false,
+      "role": "Member",
+      "created_at": 1792034472.0247526,
+      "preferences": {
+        "interests": [
+          "Building & Construction Sets",
+          "STEM & Learning Toys"
+        ],
+        "relevance_weight": 75,
+        "familiarity_weight": 60,
+        "discovery_weight": 70,
+        "priority_mode": true,
+        "price_range": [
+          0,
+          100
+        ]
+      }
     }
   },
   "email_to_id": {
     "alex@recoza.io": "u_demo_alex",
     "sarah@recoza.io": "u_demo_sarah",
     "test1@recoza.io": "user_7e5aba0ad2",
-    "bibinsee1@gmail.com": "user_8498f1b8b0"
+    "bibinsee1@gmail.com": "user_8498f1b8b0",
+    "pbibinduamb@gmail.com": "user_ca05b15e8a"
   },
   "saved_items": {
     "u_demo_alex": [
@@ -116,7 +140,10 @@
     "user_7e5aba0ad2": [
       "B00NHQF65S"
     ],
-    "user_8498f1b8b0": []
+    "user_8498f1b8b0": [],
+    "user_ca05b15e8a": [
+      "B079KHS5CY"
+    ]
   },
   "chat_sessions": {
     "u_demo_alex": [
@@ -878,6 +905,1024 @@
               }
             ],
             "timestamp": 1791957671147
+          }
+        ]
+      }
+    ],
+    "user_ca05b15e8a": [
+      {
+        "session_id": "default",
+        "title": "Find STEM robotics & science...",
+        "created_at": 1792034506.1547534,
+        "updated_at": 1792034676.843421,
+        "messages": [
+          {
+            "id": "welcome",
+            "sender": "assistant",
+            "text": "Welcome back, bindu! I'm your Recoza conversational advisor. How can I guide your discovery today? You can ask for specific categories, gift ideas, budget constraints, or age groups grounded in our 2,399-item knowledge graph.",
+            "timestamp": 1792034503041
+          },
+          {
+            "id": "u_1792034506109",
+            "sender": "user",
+            "text": "Find STEM robotics & science experiment kits",
+            "timestamp": 1792034506109
+          },
+          {
+            "id": "b_1792034506144",
+            "sender": "assistant",
+            "text": "Here are verified recommendations in **STEM & Learning Toys**, ranked via community graph topology and your active preference vector:",
+            "items": [
+              {
+                "item_id": "B07WD5YWW9",
+                "title": "Toy Item B07WD5YWW9",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B07WD5YWW9.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 4,
+                "degree": 74,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0.75,
+                  "verified": true,
+                  "final_score": 0.5287
+                },
+                "explanation": {
+                  "item_id": "B07WD5YWW9",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 74.",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (3 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B07WCQWZBD",
+                "title": "Toy Item B07WCQWZBD",
+                "category": "Puzzles & Family Board Games",
+                "cluster_name": "Puzzles & Family Board Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B07WCQWZBD.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 1,
+                "popularity": 4,
+                "degree": 39,
+                "ranking_meta": {
+                  "comm_score": 0.4595,
+                  "cf_score": 0.4,
+                  "verified": true,
+                  "final_score": 0.3738
+                },
+                "explanation": {
+                  "item_id": "B07WCQWZBD",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 39.",
+                  "community_context": "Belongs to 'Puzzles & Family Board Games', which aligns with 45% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Puzzles & Family Board Games",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 1
+                }
+              },
+              {
+                "item_id": "B079KHS5CY",
+                "title": "Toy Item B079KHS5CY",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B079KHS5CY.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 68,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0.5,
+                  "verified": true,
+                  "final_score": 0.4412
+                },
+                "explanation": {
+                  "item_id": "B079KHS5CY",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 68.",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B011SG7BX8",
+                "title": "Toy Item B011SG7BX8",
+                "category": "STEM & Learning Toys",
+                "cluster_name": "STEM & Learning Toys",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B011SG7BX8.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 2,
+                "popularity": 3,
+                "degree": 0,
+                "ranking_meta": {
+                  "comm_score": 0.5,
+                  "cf_score": 0,
+                  "verified": true,
+                  "final_score": 0.3083
+                },
+                "explanation": {
+                  "item_id": "B011SG7BX8",
+                  "primary_reason": "Matches your search for 'Find STEM robotics & science experiment kits' within 'STEM & Learning Toys', supported by high review confidence (4.0\u2605).",
+                  "community_context": "Surfaced from 'STEM & Learning Toys' via Maximal Marginal Relevance (MMR) to prevent community echo chambers.",
+                  "graph_path": "Verified across the Amazon Toys knowledge graph with 3 recorded interaction edges.",
+                  "matching_attributes": [
+                    "Cluster: STEM & Learning Toys",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 2
+                }
+              }
+            ],
+            "clarification_needed": false,
+            "suggested_replies": [
+              "Show cheaper options",
+              "I prefer higher ratings",
+              "Show something similar",
+              "Try another category"
+            ],
+            "timestamp": 1792034506144
+          },
+          {
+            "id": "u_1792034559722",
+            "sender": "user",
+            "text": "Show top LEGO building sets under $50",
+            "timestamp": 1792034559722
+          },
+          {
+            "id": "b_1792034559749",
+            "sender": "assistant",
+            "text": "Here are verified recommendations in **Building & Construction Sets** under $50.00, ranked via community graph topology and your active preference vector:",
+            "items": [
+              {
+                "item_id": "B07WD5YWW9",
+                "title": "Toy Item B07WD5YWW9",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B07WD5YWW9.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 4,
+                "degree": 74,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0.75,
+                  "verified": true,
+                  "final_score": 0.5287
+                },
+                "explanation": {
+                  "item_id": "B07WD5YWW9",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 74.",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (3 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B01KJEOCDW",
+                "title": "LEGO Creator Mighty Dinosaur Toy 31058, 3 in 1 Model, T. rex, Triceratops and Pterodactyl Dinosaur Figures, Gifts for 7-12 Year Old Boys & Girls",
+                "category": "Puzzles & Family Board Games",
+                "cluster_name": "Puzzles & Family Board Games",
+                "store": "LEGO",
+                "average_rating": 4.8,
+                "rating_number": 37084,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B01KJEOCDW.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 1,
+                "popularity": 5,
+                "degree": 6,
+                "ranking_meta": {
+                  "comm_score": 0.4595,
+                  "cf_score": 0,
+                  "verified": true,
+                  "final_score": 0.4304
+                },
+                "explanation": {
+                  "item_id": "B01KJEOCDW",
+                  "primary_reason": "Matches your search for 'Show top LEGO building sets under $50' within 'Puzzles & Family Board Games', supported by high review confidence (4.8\u2605).",
+                  "community_context": "Belongs to 'Puzzles & Family Board Games', which aligns with 45% of your demonstrated affinity.",
+                  "graph_path": "Verified across the Amazon Toys knowledge graph with 5 recorded interaction edges.",
+                  "matching_attributes": [
+                    "Brand: LEGO",
+                    "High Quality: 4.8\u2605 (37,084 reviews)",
+                    "Cluster: Puzzles & Family Board Games",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4.8,
+                  "rating_count": 37084,
+                  "community_id": 1
+                }
+              },
+              {
+                "item_id": "B07WPR1PL7",
+                "title": "Toy Item B07WPR1PL7",
+                "category": "Building & Construction Sets",
+                "cluster_name": "Building & Construction Sets",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B07WPR1PL7.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 0,
+                "popularity": 3,
+                "degree": 0,
+                "ranking_meta": {
+                  "comm_score": 0.5,
+                  "cf_score": 0,
+                  "verified": true,
+                  "final_score": 0.3667
+                },
+                "explanation": {
+                  "item_id": "B07WPR1PL7",
+                  "primary_reason": "Matches your search for 'Show top LEGO building sets under $50' within 'Building & Construction Sets', supported by high review confidence (4.0\u2605).",
+                  "community_context": "Surfaced from 'Building & Construction Sets' via Maximal Marginal Relevance (MMR) to prevent community echo chambers.",
+                  "graph_path": "Verified across the Amazon Toys knowledge graph with 3 recorded interaction edges.",
+                  "matching_attributes": [
+                    "Cluster: Building & Construction Sets",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 0
+                }
+              },
+              {
+                "item_id": "B079KHS5CY",
+                "title": "Toy Item B079KHS5CY",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B079KHS5CY.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 68,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0.5,
+                  "verified": true,
+                  "final_score": 0.4412
+                },
+                "explanation": {
+                  "item_id": "B079KHS5CY",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 68.",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              }
+            ],
+            "clarification_needed": false,
+            "suggested_replies": [
+              "Show cheaper options",
+              "I prefer higher ratings",
+              "Show something similar",
+              "Try another category"
+            ],
+            "timestamp": 1792034559749
+          },
+          {
+            "id": "u_1792034584154",
+            "sender": "user",
+            "text": "Show me items similar to \"Toy Item B07WPR1PL7\"",
+            "timestamp": 1792034584154
+          },
+          {
+            "id": "b_1792034584182",
+            "sender": "assistant",
+            "text": "Here are verified recommendations in **Building & Construction Sets** under $50.00, ranked via community graph topology and your active preference vector:",
+            "items": [
+              {
+                "item_id": "B07WD5YWW9",
+                "title": "Toy Item B07WD5YWW9",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B07WD5YWW9.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 4,
+                "degree": 74,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0.75,
+                  "verified": true,
+                  "final_score": 0.6687
+                },
+                "explanation": {
+                  "item_id": "B07WD5YWW9",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 74.",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (3 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B07WCQWZBD",
+                "title": "Toy Item B07WCQWZBD",
+                "category": "Puzzles & Family Board Games",
+                "cluster_name": "Puzzles & Family Board Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B07WCQWZBD.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 1,
+                "popularity": 4,
+                "degree": 39,
+                "ranking_meta": {
+                  "comm_score": 0.4595,
+                  "cf_score": 0.4,
+                  "verified": true,
+                  "final_score": 0.5138
+                },
+                "explanation": {
+                  "item_id": "B07WCQWZBD",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 39.",
+                  "community_context": "Belongs to 'Puzzles & Family Board Games', which aligns with 45% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Puzzles & Family Board Games",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 1
+                }
+              },
+              {
+                "item_id": "B079KHS5CY",
+                "title": "Toy Item B079KHS5CY",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B079KHS5CY.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 68,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0.5,
+                  "verified": true,
+                  "final_score": 0.5812
+                },
+                "explanation": {
+                  "item_id": "B079KHS5CY",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 68.",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B07VJ5VBBZ",
+                "title": "Toy Item B07VJ5VBBZ",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B07VJ5VBBZ.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 49,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0.5,
+                  "verified": true,
+                  "final_score": 0.5812
+                },
+                "explanation": {
+                  "item_id": "B07VJ5VBBZ",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 49.",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              }
+            ],
+            "clarification_needed": false,
+            "suggested_replies": [
+              "Show cheaper options",
+              "I prefer higher ratings",
+              "Show something similar",
+              "Try another category"
+            ],
+            "timestamp": 1792034584182
+          },
+          {
+            "id": "u_1792034601026",
+            "sender": "user",
+            "text": "can u give me the",
+            "timestamp": 1792034601026
+          },
+          {
+            "id": "b_1792034601059",
+            "sender": "assistant",
+            "text": "Here are verified recommendations in **Building & Construction Sets** under $50.00, ranked via community graph topology and your active preference vector:",
+            "items": [
+              {
+                "item_id": "B07WD5YWW9",
+                "title": "Toy Item B07WD5YWW9",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B07WD5YWW9.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 4,
+                "degree": 74,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0.75,
+                  "verified": true,
+                  "final_score": 0.5287
+                },
+                "explanation": {
+                  "item_id": "B07WD5YWW9",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 74.",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (3 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B07WCQWZBD",
+                "title": "Toy Item B07WCQWZBD",
+                "category": "Puzzles & Family Board Games",
+                "cluster_name": "Puzzles & Family Board Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B07WCQWZBD.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 1,
+                "popularity": 4,
+                "degree": 39,
+                "ranking_meta": {
+                  "comm_score": 0.4595,
+                  "cf_score": 0.4,
+                  "verified": true,
+                  "final_score": 0.3738
+                },
+                "explanation": {
+                  "item_id": "B07WCQWZBD",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 39.",
+                  "community_context": "Belongs to 'Puzzles & Family Board Games', which aligns with 45% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Puzzles & Family Board Games",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 1
+                }
+              },
+              {
+                "item_id": "B0C46XMC91",
+                "title": "Ingenuity Premium Soft Plush Squeak Toy - Farrow The Hedgehog, Ages Newborn and up",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Ingenuity",
+                "average_rating": 4.7,
+                "rating_number": 543,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B0C46XMC91.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 47,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0,
+                  "verified": true,
+                  "final_score": 0.4529
+                },
+                "explanation": {
+                  "item_id": "B0C46XMC91",
+                  "primary_reason": "Matches your search for 'can u give me the' within 'Arts & Creative Crafts', supported by high review confidence (4.7\u2605).",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Verified across the Amazon Toys knowledge graph with 3 recorded interaction edges.",
+                  "matching_attributes": [
+                    "Brand: Ingenuity",
+                    "High Quality: 4.7\u2605 (543 reviews)",
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4.7,
+                  "rating_count": 543,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B079KHS5CY",
+                "title": "Toy Item B079KHS5CY",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B079KHS5CY.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 68,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0.5,
+                  "verified": true,
+                  "final_score": 0.4412
+                },
+                "explanation": {
+                  "item_id": "B079KHS5CY",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 68.",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              }
+            ],
+            "clarification_needed": false,
+            "suggested_replies": [
+              "Show cheaper options",
+              "I prefer higher ratings",
+              "Show something similar",
+              "Try another category"
+            ],
+            "timestamp": 1792034601059
+          },
+          {
+            "id": "u_1792034623904",
+            "sender": "user",
+            "text": "give me the game similiar to the rdr",
+            "timestamp": 1792034623904
+          },
+          {
+            "id": "b_1792034623943",
+            "sender": "assistant",
+            "text": "Here are verified recommendations in **Building & Construction Sets** under $50.00, ranked via community graph topology and your active preference vector:",
+            "items": [
+              {
+                "item_id": "B07WD5YWW9",
+                "title": "Toy Item B07WD5YWW9",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B07WD5YWW9.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 4,
+                "degree": 74,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0.75,
+                  "verified": true,
+                  "final_score": 0.5287
+                },
+                "explanation": {
+                  "item_id": "B07WD5YWW9",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 74.",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (3 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B07WCQWZBD",
+                "title": "Toy Item B07WCQWZBD",
+                "category": "Puzzles & Family Board Games",
+                "cluster_name": "Puzzles & Family Board Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B07WCQWZBD.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 1,
+                "popularity": 4,
+                "degree": 39,
+                "ranking_meta": {
+                  "comm_score": 0.4595,
+                  "cf_score": 0.4,
+                  "verified": true,
+                  "final_score": 0.4321
+                },
+                "explanation": {
+                  "item_id": "B07WCQWZBD",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 39.",
+                  "community_context": "Belongs to 'Puzzles & Family Board Games', which aligns with 45% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Puzzles & Family Board Games",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 1
+                }
+              },
+              {
+                "item_id": "B0C46XMC91",
+                "title": "Ingenuity Premium Soft Plush Squeak Toy - Farrow The Hedgehog, Ages Newborn and up",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Ingenuity",
+                "average_rating": 4.7,
+                "rating_number": 543,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B0C46XMC91.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 47,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0,
+                  "verified": true,
+                  "final_score": 0.4529
+                },
+                "explanation": {
+                  "item_id": "B0C46XMC91",
+                  "primary_reason": "Matches your search for 'give me the game similiar to the rdr' within 'Arts & Creative Crafts', supported by high review confidence (4.7\u2605).",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Verified across the Amazon Toys knowledge graph with 3 recorded interaction edges.",
+                  "matching_attributes": [
+                    "Brand: Ingenuity",
+                    "High Quality: 4.7\u2605 (543 reviews)",
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4.7,
+                  "rating_count": 543,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B09NPJGN9N",
+                "title": "Melissa & Doug Underwater Ocean Floor Puzzle (48 pcs, 2 x 3 feet)",
+                "category": "Puzzles & Family Board Games",
+                "cluster_name": "Puzzles & Family Board Games",
+                "store": "Melissa & Doug",
+                "average_rating": 4.8,
+                "rating_number": 30339,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B09NPJGN9N.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 1,
+                "popularity": 9,
+                "degree": 6,
+                "ranking_meta": {
+                  "comm_score": 0.4595,
+                  "cf_score": 0,
+                  "verified": true,
+                  "final_score": 0.3721
+                },
+                "explanation": {
+                  "item_id": "B09NPJGN9N",
+                  "primary_reason": "Matches your search for 'give me the game similiar to the rdr' within 'Puzzles & Family Board Games', supported by high review confidence (4.8\u2605).",
+                  "community_context": "Belongs to 'Puzzles & Family Board Games', which aligns with 45% of your demonstrated affinity.",
+                  "graph_path": "Verified across the Amazon Toys knowledge graph with 9 recorded interaction edges.",
+                  "matching_attributes": [
+                    "Brand: Melissa & Doug",
+                    "High Quality: 4.8\u2605 (30,339 reviews)",
+                    "Cluster: Puzzles & Family Board Games",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4.8,
+                  "rating_count": 30339,
+                  "community_id": 1
+                }
+              }
+            ],
+            "clarification_needed": false,
+            "suggested_replies": [
+              "Show cheaper options",
+              "I prefer higher ratings",
+              "Show something similar",
+              "Try another category"
+            ],
+            "timestamp": 1792034623943
+          },
+          {
+            "id": "u_1792034676787",
+            "sender": "user",
+            "text": "Show cheaper options",
+            "timestamp": 1792034676787
+          },
+          {
+            "id": "b_1792034676831",
+            "sender": "assistant",
+            "text": "I've adjusted your budget filter to **under $35.00**. Here are budget-conscious options from the catalog:",
+            "items": [
+              {
+                "item_id": "B07WD5YWW9",
+                "title": "Toy Item B07WD5YWW9",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B07WD5YWW9.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 4,
+                "degree": 74,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0.75,
+                  "verified": true,
+                  "final_score": 0.5287
+                },
+                "explanation": {
+                  "item_id": "B07WD5YWW9",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 74.",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (3 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B07WCQWZBD",
+                "title": "Toy Item B07WCQWZBD",
+                "category": "Puzzles & Family Board Games",
+                "cluster_name": "Puzzles & Family Board Games",
+                "store": "Unknown",
+                "average_rating": 4,
+                "rating_number": 10,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B07WCQWZBD.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 1,
+                "popularity": 4,
+                "degree": 39,
+                "ranking_meta": {
+                  "comm_score": 0.4595,
+                  "cf_score": 0.4,
+                  "verified": true,
+                  "final_score": 0.4321
+                },
+                "explanation": {
+                  "item_id": "B07WCQWZBD",
+                  "primary_reason": "Selected because it connects directly to your past interest in 'LEGO Unikitty! Dr. Fox Laborator...' via graph degree 39.",
+                  "community_context": "Belongs to 'Puzzles & Family Board Games', which aligns with 45% of your demonstrated affinity.",
+                  "graph_path": "Strong topological co-occurrence with 'LEGO Unikitty! Dr. Fox Laboratory 41454 ...' (2 co-purchasing connections).",
+                  "matching_attributes": [
+                    "Cluster: Puzzles & Family Board Games",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary. Relatively few customer reviews in training sample.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4,
+                  "rating_count": 10,
+                  "community_id": 1
+                }
+              },
+              {
+                "item_id": "B0C46XMC91",
+                "title": "Ingenuity Premium Soft Plush Squeak Toy - Farrow The Hedgehog, Ages Newborn and up",
+                "category": "Arts & Creative Crafts",
+                "cluster_name": "Arts & Creative Crafts",
+                "store": "Ingenuity",
+                "average_rating": 4.7,
+                "rating_number": 543,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B0C46XMC91.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 3,
+                "popularity": 3,
+                "degree": 47,
+                "ranking_meta": {
+                  "comm_score": 0.5405,
+                  "cf_score": 0,
+                  "verified": true,
+                  "final_score": 0.4529
+                },
+                "explanation": {
+                  "item_id": "B0C46XMC91",
+                  "primary_reason": "Matches your search for 'Show cheaper options' within 'Arts & Creative Crafts', supported by high review confidence (4.7\u2605).",
+                  "community_context": "Belongs to 'Arts & Creative Crafts', which aligns with 54% of your demonstrated affinity.",
+                  "graph_path": "Verified across the Amazon Toys knowledge graph with 3 recorded interaction edges.",
+                  "matching_attributes": [
+                    "Brand: Ingenuity",
+                    "High Quality: 4.7\u2605 (543 reviews)",
+                    "Cluster: Arts & Creative Crafts",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4.7,
+                  "rating_count": 543,
+                  "community_id": 3
+                }
+              },
+              {
+                "item_id": "B09NPJGN9N",
+                "title": "Melissa & Doug Underwater Ocean Floor Puzzle (48 pcs, 2 x 3 feet)",
+                "category": "Puzzles & Family Board Games",
+                "cluster_name": "Puzzles & Family Board Games",
+                "store": "Melissa & Doug",
+                "average_rating": 4.8,
+                "rating_number": 30339,
+                "price": null,
+                "price_formatted": "Price unavailable",
+                "image_url": "https://images-na.ssl-images-amazon.com/images/P/B09NPJGN9N.01._SX300_SCLZZZZZZZ_.jpg",
+                "community_id": 1,
+                "popularity": 9,
+                "degree": 6,
+                "ranking_meta": {
+                  "comm_score": 0.4595,
+                  "cf_score": 0,
+                  "verified": true,
+                  "final_score": 0.3721
+                },
+                "explanation": {
+                  "item_id": "B09NPJGN9N",
+                  "primary_reason": "Matches your search for 'Show cheaper options' within 'Puzzles & Family Board Games', supported by high review confidence (4.8\u2605).",
+                  "community_context": "Belongs to 'Puzzles & Family Board Games', which aligns with 45% of your demonstrated affinity.",
+                  "graph_path": "Verified across the Amazon Toys knowledge graph with 9 recorded interaction edges.",
+                  "matching_attributes": [
+                    "Brand: Melissa & Doug",
+                    "High Quality: 4.8\u2605 (30,339 reviews)",
+                    "Cluster: Puzzles & Family Board Games",
+                    "Price: Catalog list price unavailable"
+                  ],
+                  "limitations": "Price is not provided in source metadata; availability may vary.",
+                  "trust_badge": "Graph Verified (Ground Truth)",
+                  "average_rating": 4.8,
+                  "rating_count": 30339,
+                  "community_id": 1
+                }
+              }
+            ],
+            "clarification_needed": false,
+            "suggested_replies": [
+              "Show cheaper options",
+              "I prefer higher ratings",
+              "Show something similar",
+              "Try another category"
+            ],
+            "timestamp": 1792034676831
           }
         ]
       }

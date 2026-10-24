@@ -52,6 +52,8 @@ import {
 
 interface DashboardProps {
   user: UserProfile
+  initialPrompt?: string
+  onClearInitialPrompt?: () => void
   onLogout: () => void
   onNavigate: (view: 'dashboard' | 'preferences' | 'saved') => void
   onOpenSettings: () => void
@@ -77,6 +79,8 @@ const QUICK_PROMPTS = [
 
 export const Dashboard: React.FC<DashboardProps> = ({
   user,
+  initialPrompt,
+  onClearInitialPrompt,
   onLogout,
   onNavigate,
   onOpenSettings,
@@ -296,6 +300,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
       setLoading(false)
     }
   }
+
+  // Auto-send initial prompt if passed from landing page hero
+  useEffect(() => {
+    if (initialPrompt && initialPrompt.trim()) {
+      handleSend(initialPrompt)
+      if (onClearInitialPrompt) onClearInitialPrompt()
+    }
+  }, [initialPrompt])
 
   // Toggle save item
   const handleToggleSave = async (item: Item) => {
@@ -767,6 +779,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
                                   </span>
                                 </div>
                               </div>
+
+                              {/* Grounded Explanation Snippet */}
+                              {item.explanation?.primary_reason && (
+                                <div className="mb-2 p-2.5 rounded-xl bg-teal-500/[0.08] border border-teal-500/20 text-[11px] text-teal-200 leading-snug">
+                                  <div className="flex items-center gap-1 font-bold text-teal-300 text-[10px] uppercase tracking-wider mb-1">
+                                    <ShieldCheck className="w-3.5 h-3.5 text-teal-400" />
+                                    <span>Why Recommended</span>
+                                  </div>
+                                  <p className="line-clamp-2 text-slate-300 italic">“{item.explanation.primary_reason}”</p>
+                                </div>
+                              )}
 
                               {/* Card Actions */}
                               <div className="pt-2.5 border-t border-white/5 flex flex-col gap-2">
