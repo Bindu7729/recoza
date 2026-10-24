@@ -59,12 +59,20 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToHome 
     }
   }
 
-  // Quick Demo Account Auto-Fill
-  const handleFillDemo = (demoEmail: string, demoName: string) => {
-    setMode('login')
-    setEmail(demoEmail)
-    setPassword('recoza123')
+  // Quick Demo Account Instant Login
+  const handleQuickLogin = async (demoEmail: string, demoPassword = 'recoza123') => {
     setError(null)
+    setLoading(true)
+    try {
+      const res = await loginUserWithEmail(demoEmail, demoPassword)
+      localStorage.setItem('recoza_user_id', res.user.user_id)
+      localStorage.setItem('recoza_token', res.token)
+      onAuthSuccess(res.user)
+    } catch (err: any) {
+      setError(err.message || 'Quick login failed')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -236,28 +244,43 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToHome 
 
         {/* Demo Accounts Quick-Fill Section */}
         <div className="mt-8 pt-5 border-t border-white/10">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2.5">
-            Quick-Test Personas
-          </span>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex items-center justify-between mb-2.5">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+              1-Click Demo Personas
+            </span>
+            <span className="text-[10px] text-teal-400 font-medium">Instant Login</span>
+          </div>
+          <div className="grid grid-cols-2 gap-2 mb-3">
             <button
               type="button"
-              onClick={() => handleFillDemo('alex@recoza.io', 'Alex Rivera')}
-              className="p-2.5 rounded-xl bg-white/5 hover:bg-teal-500/10 border border-white/5 hover:border-teal-500/30 text-left transition-all cursor-pointer"
+              disabled={loading}
+              onClick={() => handleQuickLogin('alex@recoza.io')}
+              className="p-2.5 rounded-xl bg-white/5 hover:bg-teal-500/10 border border-white/5 hover:border-teal-500/30 text-left transition-all cursor-pointer group disabled:opacity-50"
             >
-              <span className="text-xs font-bold text-white block">Alex Rivera</span>
+              <span className="text-xs font-bold text-white group-hover:text-teal-300 block">Alex Rivera</span>
               <span className="text-[10px] text-teal-300/80 block">Creative Builder</span>
             </button>
 
             <button
               type="button"
-              onClick={() => handleFillDemo('sarah@recoza.io', 'Sarah Jenkins')}
-              className="p-2.5 rounded-xl bg-white/5 hover:bg-teal-500/10 border border-white/5 hover:border-teal-500/30 text-left transition-all cursor-pointer"
+              disabled={loading}
+              onClick={() => handleQuickLogin('sarah@recoza.io')}
+              className="p-2.5 rounded-xl bg-white/5 hover:bg-teal-500/10 border border-white/5 hover:border-teal-500/30 text-left transition-all cursor-pointer group disabled:opacity-50"
             >
-              <span className="text-xs font-bold text-white block">Sarah Jenkins</span>
+              <span className="text-xs font-bold text-white group-hover:text-teal-300 block">Sarah Jenkins</span>
               <span className="text-[10px] text-teal-300/80 block">Collector</span>
             </button>
           </div>
+
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => handleQuickLogin('alex@recoza.io')}
+            className="w-full py-2.5 rounded-xl bg-teal-500/15 hover:bg-teal-500/25 border border-teal-500/30 text-xs font-bold text-teal-300 flex items-center justify-center gap-2 transition-all cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+            <span>Continue as Guest (Instant Access)</span>
+          </button>
         </div>
 
       </div>

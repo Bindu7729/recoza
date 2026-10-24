@@ -14,8 +14,9 @@ import { MyPreferencesView } from './components/preferences/MyPreferencesView'
 import { SavedItemsView } from './components/saved/SavedItemsView'
 import { SettingsModal } from './components/modals/SettingsModal'
 import { ItemDetailModal } from './components/ItemDetailModal'
+import { CatalogExplorer } from './components/CatalogExplorer'
 import { UserProfile, Item } from './types'
-import { fetchCurrentUser, submitFeedback, toggleSavedItem, fetchSavedItems } from './api'
+import { fetchCurrentUser, submitFeedback, toggleSavedItem, fetchSavedItems, loginUserWithEmail } from './api'
 
 type AppView = 'landing' | 'auth' | 'onboarding' | 'dashboard' | 'preferences' | 'saved'
 
@@ -25,6 +26,7 @@ export function App() {
   const [selectedItemForModal, setSelectedItemForModal] = useState<Item | null>(null)
   const [savedItemIds, setSavedItemIds] = useState<Set<string>>(new Set())
   const [settingsModalOpen, setSettingsModalOpen] = useState(false)
+  const [catalogExplorerOpen, setCatalogExplorerOpen] = useState(false)
   const [initialLoading, setInitialLoading] = useState(true)
   const [initialPrompt, setInitialPrompt] = useState<string>('')
 
@@ -55,9 +57,21 @@ export function App() {
   }, [])
 
   // Navigation handlers
-  const handleGetStarted = (promptText?: string) => {
+  const handleGetStarted = async (promptText?: string) => {
     if (promptText) {
       setInitialPrompt(promptText)
+      if (!currentUser) {
+        try {
+          const res = await loginUserWithEmail('alex@recoza.io', 'recoza123')
+          localStorage.setItem('recoza_user_id', res.user.user_id)
+          localStorage.setItem('recoza_token', res.token)
+          setCurrentUser(res.user)
+          setCurrentView('dashboard')
+          return
+        } catch {
+          // If login fails, proceed to auth
+        }
+      }
     }
     if (currentUser) {
       if (currentUser.is_first_time) {
@@ -156,9 +170,18 @@ export function App() {
           onNavigate={(view) => {
             if (view === 'preferences') setCurrentView('preferences')
             else if (view === 'saved') setCurrentView('saved')
+            else if (view === 'landing') setCurrentView('landing')
             else setCurrentView('dashboard')
           }}
           onOpenSettings={() => setSettingsModalOpen(true)}
+          onOpenItemDetail={(item) => setSelectedItemForModal(item)}
+          onOpenCatalog={() => setCatalogExplorerOpen(true)}
+        />
+
+        {/* Catalog Explorer Modal */}
+        <CatalogExplorer
+          isOpen={catalogExplorerOpen}
+          onClose={() => setCatalogExplorerOpen(false)}
           onOpenItemDetail={(item) => setSelectedItemForModal(item)}
         />
 
@@ -287,6 +310,7 @@ export function App() {
           }
         }}
         onGetStarted={handleGetStarted}
+        onOpenCatalog={() => setCatalogExplorerOpen(true)}
       />
 
       {/* ── Main Landing Page Content ── */}
@@ -320,6 +344,28 @@ export function App() {
 
       {/* ── Section 7: Footer ── */}
       <Footer />
+
+      {/* Knowledge Graph Catalog Explorer Modal */}
+      <CatalogExplorer
+        isOpen={catalogExplorerOpen}
+        onClose={() => setCatalogExplorerOpen(false)}
+        onOpenItemDetail={(item) => setSelectedItemForModal(item)}
+      />
+
+      {/* Item Detail Modal for Landing Page Catalog Explorer */}
+      {selectedItemForModal && (
+        <ItemDetailModal
+          item={selectedItemForModal}
+          isSaved={savedItemIds.has(selectedItemForModal.item_id)}
+          onToggleSave={handleModalToggleSave}
+          onClose={() => setSelectedItemForModal(null)}
+          onFeedback={handleModalFeedback}
+          onAskChat={(query) => {
+            setSelectedItemForModal(null)
+            handleGetStarted(query)
+          }}
+        />
+      )}
 
     </div>
   )

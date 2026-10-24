@@ -6,12 +6,14 @@ interface NavbarProps {
   currentUser: DemoUser | null
   onOpenAuth: () => void
   onGetStarted: () => void
+  onOpenCatalog?: () => void
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   currentUser,
   onOpenAuth,
-  onGetStarted
+  onGetStarted,
+  onOpenCatalog
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -49,7 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Center Nav Items */}
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-7">
           <button 
             onClick={() => scrollToSection('conversational')}
             className="text-sm font-medium text-slate-300 hover:text-teal-300 transition-colors cursor-pointer"
@@ -74,6 +76,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             Comparison
           </button>
+          {onOpenCatalog && (
+            <button 
+              onClick={onOpenCatalog}
+              className="text-xs font-semibold text-teal-300 hover:text-teal-200 transition-all cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/25 hover:border-teal-500/40 hover:bg-teal-500/15"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+              <span>Explore Catalog</span>
+            </button>
+          )}
         </nav>
 
         {/* Right Actions: Sign In & Get Started Button */}
@@ -132,6 +143,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             Comparison
           </button>
+          {onOpenCatalog && (
+            <button 
+              onClick={() => { setMobileMenuOpen(false); onOpenCatalog(); }}
+              className="w-full text-left py-2.5 text-sm font-semibold text-teal-300 hover:text-teal-200 flex items-center gap-2"
+            >
+              <Sparkles className="w-4 h-4 text-teal-400" />
+              <span>Explore Knowledge Graph Catalog</span>
+            </button>
+          )}
 
           <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
             <button 

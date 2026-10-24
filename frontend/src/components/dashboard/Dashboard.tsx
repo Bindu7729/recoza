@@ -26,7 +26,8 @@ import {
   Check,
   ArrowRight,
   RefreshCw,
-  HelpCircle
+  HelpCircle,
+  Compass
 } from 'lucide-react'
 import {
   UserProfile,
@@ -55,9 +56,10 @@ interface DashboardProps {
   initialPrompt?: string
   onClearInitialPrompt?: () => void
   onLogout: () => void
-  onNavigate: (view: 'dashboard' | 'preferences' | 'saved') => void
+  onNavigate: (view: 'dashboard' | 'preferences' | 'saved' | 'landing') => void
   onOpenSettings: () => void
   onOpenItemDetail: (item: Item) => void
+  onOpenCatalog?: () => void
 }
 
 const AVAILABLE_INTERESTS = [
@@ -84,7 +86,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
   onLogout,
   onNavigate,
   onOpenSettings,
-  onOpenItemDetail
+  onOpenItemDetail,
+  onOpenCatalog
 }) => {
   // Navigation & UI state
   const [activeTab, setActiveTab] = useState<'chat' | 'preferences' | 'saved'>('chat')
@@ -435,8 +438,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
           
           {/* Top Brand Header */}
           <div className="p-4 flex items-center justify-between border-b border-white/5">
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-6 flex items-center justify-center">
+            <div 
+              onClick={() => onNavigate('landing')}
+              className="flex items-center gap-2.5 cursor-pointer group select-none"
+              title="Return to Home Landing Page"
+            >
+              <div className="w-7 h-6 flex items-center justify-center transition-transform group-hover:scale-105">
                 <svg viewBox="0 0 36 28" fill="none" className="w-full h-full drop-shadow-[0_0_10px_rgba(45,212,191,0.5)]">
                   <path 
                     d="M10 24C6.68629 24 4 21.3137 4 18C4 14.8638 6.40982 12.2903 9.48911 12.0249C10.2831 7.47277 14.2384 4 19 4C24.1685 4 28.4184 7.92558 28.9567 12.9669C31.849 13.5684 34 16.1264 34 19.2C34 22.7346 31.1346 25.6 27.6 25.6C26.969 25.6 11.2 25.6 10 24Z" 
@@ -499,6 +506,21 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </div>
               <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
             </button>
+
+            {onOpenCatalog && (
+              <button
+                onClick={onOpenCatalog}
+                className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-teal-300 hover:bg-white/5 transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Compass className="w-4 h-4 text-teal-400" />
+                  <span>Catalog Explorer</span>
+                </div>
+                <span className="px-2 py-0.5 rounded-full bg-teal-500/15 text-teal-300 text-[10px] font-mono">
+                  2,399
+                </span>
+              </button>
+            )}
 
             <button
               onClick={() => onNavigate('saved')}
