@@ -39,7 +39,23 @@ class RecommendationExplainer:
         matching_attrs.append(f"Rating: {avg_rating}★ ({review_count:,} verified reviews)")
         matching_attrs.append(f"Louvain Cluster: {cluster_name}")
         
-        if item.get('is_game'):
+        if item.get('is_laptop'):
+            matching_attrs.append("Category: Lightweight Laptop / Ultrabook")
+            if item.get('specs'):
+                matching_attrs.append(f"Specs: {item['specs']}")
+        elif item.get('is_movie'):
+            matching_attrs.append("Format: Feature Film / Cinema")
+            if item.get('specs'):
+                matching_attrs.append(f"Details: {item['specs']}")
+        elif item.get('is_photo'):
+            matching_attrs.append("Category: Photography & Creator Equipment")
+            if item.get('specs'):
+                matching_attrs.append(f"Specs: {item['specs']}")
+        elif item.get('is_audio_tech'):
+            matching_attrs.append("Category: Audio & Lifestyle Tech")
+            if item.get('specs'):
+                matching_attrs.append(f"Specs: {item['specs']}")
+        elif item.get('is_game'):
             matching_attrs.append("Format: Tabletop / Board Game")
         elif item.get('is_building'):
             matching_attrs.append("Type: Building / Construction Set")
@@ -47,10 +63,14 @@ class RecommendationExplainer:
         if item.get('is_educational'):
             matching_attrs.append("Focus: STEM & Learning")
             
-        if item.get('price') is not None:
-            matching_attrs.append(f"Price: ${item['price']:.2f}")
-            if max_budget and item['price'] <= max_budget:
-                matching_attrs.append(f"Budget: Under ${max_budget:.2f}")
+        if item.get('price_formatted'):
+            matching_attrs.append(f"Price: {item['price_formatted']}")
+        elif item.get('price') is not None:
+            curr = item.get('price_currency', 'USD')
+            if curr == 'INR':
+                matching_attrs.append(f"Price: INR {item['price']:,.0f}")
+            else:
+                matching_attrs.append(f"Price: ${item['price']:.2f}")
         else:
             matching_attrs.append("Price: Catalog list price unavailable")
 
@@ -80,11 +100,21 @@ class RecommendationExplainer:
             graph_path = f"Strong topological co-occurrence with '{hist_item['title'][:40]}...' ({shared_buyers} co-purchasing connections)."
             primary_reason = f"Recommended because it shares direct co-purchasing patterns with your past interest in '{hist_item['title'][:32]}...' via graph degree {item.get('degree', 1)}."
         elif user_query:
-            graph_path = f"Verified across the Amazon Toys & Games co-occurrence graph ({item.get('popularity', 15)} recorded interactions, degree {item.get('degree', 0)})."
+            graph_path = f"Verified across the Recoza catalog graph ({item.get('popularity', 15)} recorded interactions, degree {item.get('degree', 0)})."
             
             # Ground specific features in query
             q_low = user_query.lower()
             matched_aspects = []
+            if ('laptop' in q_low or 'macbook' in q_low) and item.get('is_laptop'):
+                matched_aspects.append("lightweight developer form factor")
+            if ('program' in q_low or 'coding' in q_low or 'developer' in q_low) and item.get('is_laptop'):
+                matched_aspects.append("multitasking & code compilation performance")
+            if ('movie' in q_low or 'film' in q_low or 'cinema' in q_low) and item.get('is_movie'):
+                matched_aspects.append("cinematic acclaim & storytelling depth")
+            if ('photo' in q_low or 'camera' in q_low or 'gift' in q_low) and item.get('is_photo'):
+                matched_aspects.append("creative photography utility & creator ergonomics")
+            if ('audio' in q_low or 'headphone' in q_low or 'keyboard' in q_low) and item.get('is_audio_tech'):
+                matched_aspects.append("high-fidelity audio & productivity hardware")
             if 'game' in q_low and item.get('is_game'):
                 matched_aspects.append("verified game mechanics")
             if 'build' in q_low and (item.get('is_building') or 'build' in title.lower() or 'tower' in title.lower() or 'stack' in title.lower()):

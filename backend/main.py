@@ -295,7 +295,7 @@ def get_evaluation_benchmarks():
 
     stats = graph_engine.get_stats()
     return {
-        "dataset": "Amazon Reviews (Toys & Games)",
+        "dataset": "Recoza Multi-Domain Catalog (Laptops, Movies, Creator Gear, Tech & Games)",
         "catalog_items": stats['total_items'],
         "graph_edges": stats['graph_edges'],
         "communities": stats['unique_communities'],

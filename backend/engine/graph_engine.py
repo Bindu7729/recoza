@@ -25,7 +25,11 @@ COMMUNITY_NAMES = {
     10: "Musical & Sound Toys",
     11: "Electronic & Interactive Toys",
     12: "Costumes & Roleplay Accessories",
-    13: "Model Kits & Hobbies"
+    13: "Model Kits & Hobbies",
+    14: "Laptops & Computers",
+    15: "Movies & Entertainment",
+    16: "Photography & Creator Gear",
+    17: "Audio & Lifestyle Tech"
 }
 
 GAME_TITLE_PAT = re.compile(
@@ -50,8 +54,13 @@ class GraphEngine:
     def __init__(self, data_dir: str):
         self.data_dir = data_dir
         self.interactions_path = os.path.join(data_dir, "toys_interactions.csv")
-        self.metadata_path = os.path.join(data_dir, "toys_metadata.json")
-        self.communities_path = os.path.join(data_dir, "graph_communities_train.json")
+        self.metadata_path = os.path.join(data_dir, "recoza_catalog_metadata.json")
+        if not os.path.exists(self.metadata_path):
+            self.metadata_path = os.path.join(data_dir, "toys_metadata.json")
+            
+        self.communities_path = os.path.join(data_dir, "recoza_communities.json")
+        if not os.path.exists(self.communities_path):
+            self.communities_path = os.path.join(data_dir, "graph_communities_train.json")
         
         self.items_meta = {}
         self.item_to_comm = {}
@@ -162,40 +171,92 @@ class GraphEngine:
         text = f"{title} {store}"
         return bool(EDU_PAT.search(text))
 
+    def is_laptop(self, item_id_or_meta) -> bool:
+        meta = item_id_or_meta if isinstance(item_id_or_meta, dict) else self.items_meta.get(item_id_or_meta, {})
+        cat = str(meta.get('category', '')).lower()
+        title = str(meta.get('title', '')).lower()
+        if any(w in title for w in ['paper', 'drawing', 'scratch', 'spiral', 'journal', 'hardcover', 'backpack', 'sleeve', 'case', 'bag']):
+            return False
+        if 'laptops & computers' in cat:
+            return True
+        return 'laptop' in cat or 'macbook' in title or 'thinkpad' in title or 'zenbook' in title or ('laptop' in title and 'toy' not in title)
+
+    def is_movie(self, item_id_or_meta) -> bool:
+        meta = item_id_or_meta if isinstance(item_id_or_meta, dict) else self.items_meta.get(item_id_or_meta, {})
+        cat = str(meta.get('category', '')).lower()
+        title = str(meta.get('title', '')).lower()
+        return 'movie' in cat or 'entertainment' in cat or 'film' in title or 'directed by' in title
+
+    def is_photo(self, item_id_or_meta) -> bool:
+        meta = item_id_or_meta if isinstance(item_id_or_meta, dict) else self.items_meta.get(item_id_or_meta, {})
+        cat = str(meta.get('category', '')).lower()
+        title = str(meta.get('title', '')).lower()
+        if 'laptops' in cat or 'macbook' in title or 'laptop' in title:
+            return False
+        if 'photography & creator gear' in cat:
+            return True
+        return 'photograph' in cat or 'creator' in cat or 'mirrorless' in title or 'lens' in title or 'drone' in title or 'gorillapod' in title or 'tripod' in title or ('camera' in title and 'webcam' not in title and 'facetime' not in title)
+
+    def is_audio_tech(self, item_id_or_meta) -> bool:
+        meta = item_id_or_meta if isinstance(item_id_or_meta, dict) else self.items_meta.get(item_id_or_meta, {})
+        cat = str(meta.get('category', '')).lower()
+        title = str(meta.get('title', '')).lower()
+        return 'audio' in cat or 'headphones' in title or 'airpods' in title or 'keyboard' in title or 'mouse' in title or 'kindle' in title
+
     def get_game_items(self) -> list:
         return [it for it in self.items_meta if self.is_game(it)]
+
+    def get_community_name(self, cid: int) -> str:
+        return COMMUNITY_NAMES.get(cid, "General Catalog")
 
     def get_item(self, item_id: str) -> dict:
         meta = self.items_meta.get(item_id, {})
         cid = self.item_to_comm.get(item_id, -1)
-        cluster_name = COMMUNITY_NAMES.get(cid, "General Toys & Games")
+        cluster_name = COMMUNITY_NAMES.get(cid, "General Catalog")
         
         # Genuine price from dataset if present, else None
         raw_price = meta.get('price', None)
         price_val = float(raw_price) if raw_price is not None and str(raw_price).strip() != '' else None
-        price_formatted = f"${price_val:.2f}" if price_val is not None else "Price unavailable"
         
-        # Genuine Amazon ASIN image CDN URL
+        if meta.get('price_formatted'):
+            price_formatted = meta['price_formatted']
+        elif price_val is not None:
+            if meta.get('price_currency') == 'INR':
+                price_formatted = f"INR {price_val:,.0f}"
+            else:
+                price_formatted = f"${price_val:.2f}"
+        else:
+            price_formatted = "Price unavailable"
+        
+        # Image URL
         image_url = meta.get('image', meta.get('image_url', f"https://images-na.ssl-images-amazon.com/images/P/{item_id}.01._SX300_SCLZZZZZZZ_.jpg"))
         
         return {
             'item_id': item_id,
-            'title': meta.get('title', f"Toy Item {item_id}"),
+            'title': meta.get('title', f"Item {item_id}"),
             'category': cluster_name if meta.get('category') in ['Toys & Games', None] else meta.get('category'),
             'cluster_name': cluster_name,
             'store': meta.get('store', 'Verified Catalog Store'),
             'average_rating': meta.get('average_rating', 4.5),
             'rating_number': meta.get('rating_number', 100),
             'price': price_val,
+            'price_currency': meta.get('price_currency', 'USD'),
             'price_formatted': price_formatted,
+            'specs': meta.get('specs', ''),
+            'description': meta.get('description', ''),
             'image_url': image_url,
             'community_id': cid,
+            'community_name': self.get_community_name(cid),
             'popularity': self.item_pop.get(item_id, 0),
             'degree': self.item_graph.degree(item_id) if self.item_graph.has_node(item_id) else 0,
             'is_game': self.is_game(meta),
             'is_toy': self.is_toy(meta),
             'is_building': self.is_building(meta),
-            'is_educational': self.is_educational(meta)
+            'is_educational': self.is_educational(meta),
+            'is_laptop': self.is_laptop(meta),
+            'is_movie': self.is_movie(meta),
+            'is_photo': self.is_photo(meta),
+            'is_audio_tech': self.is_audio_tech(meta)
         }
 
     def get_neighbors(self, item_id: str, limit: int = 6) -> list:
@@ -239,6 +300,14 @@ class GraphEngine:
                 continue
             elif domain_type == 'toys' and not self.is_toy(meta):
                 continue
+            elif domain_type == 'laptops' and not self.is_laptop(meta):
+                continue
+            elif domain_type == 'movies' and not self.is_movie(meta):
+                continue
+            elif domain_type == 'photography' and not self.is_photo(meta):
+                continue
+            elif domain_type == 'audio_tech' and not self.is_audio_tech(meta):
+                continue
                 
             if is_building and not self.is_building(meta):
                 # allow puzzle / balancing games if building game is requested
@@ -250,9 +319,11 @@ class GraphEngine:
             if is_educational and not self.is_educational(meta):
                 continue
 
-            # Text matching score: exclude generic 'Toys & Games' string to prevent false positive matches
+            # Text matching score: include specs and descriptions for rich technical queries
             match_score = 0
-            combined_text = f"{title} {store} {cluster_name}"
+            specs_text = str(meta.get('specs', '')).lower()
+            desc_text = str(meta.get('description', '')).lower()
+            combined_text = f"{title} {store} {cluster_name} {specs_text} {desc_text}"
             
             if q_tokens:
                 matched_tokens = sum(1 for tok in q_tokens if tok in combined_text)
@@ -308,5 +379,5 @@ class GraphEngine:
             'unique_communities': len(self.comm_to_items),
             'modularity_q': round(self.modularity, 4),
             'graph_edges': self.num_edges,
-            'catalog_domain': "Amazon Reviews 2023 (Toys and Games)"
+            'catalog_domain': "Recoza Multi-Domain Intelligence Catalog"
         }

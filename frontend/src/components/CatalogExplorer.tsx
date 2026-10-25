@@ -71,7 +71,7 @@ export const CatalogExplorer: React.FC<CatalogExplorerProps> = ({
             </div>
             <div>
               <h2 className="text-xl font-bold text-white tracking-tight">Explore Knowledge Graph Catalog</h2>
-              <p className="text-xs text-slate-400">2,399 verified Amazon items across 14 Louvain communities</p>
+              <p className="text-xs text-slate-400">Explore multi-domain products across verified catalog knowledge clusters</p>
             </div>
           </div>
 

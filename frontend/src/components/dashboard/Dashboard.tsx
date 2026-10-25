@@ -73,10 +73,10 @@ const AVAILABLE_INTERESTS = [
 ]
 
 const QUICK_PROMPTS = [
-  "Show top LEGO building sets under $50",
-  "Find STEM robotics & science experiment kits",
-  "Recommend cooperative family board games",
-  "Arts and craft kits for creative projects"
+  "Recommend a lightweight laptop for programming under ₹70,000",
+  "Suggest a sci-fi movie like Interstellar",
+  "Recommend a useful gift for someone who loves photography",
+  "Cooperative family board games & tabletop strategy"
 ]
 
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -106,7 +106,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     {
       id: 'welcome',
       sender: 'assistant',
-      text: `Welcome back, ${user.name}! I'm your Recoza conversational advisor. How can I guide your discovery today? You can ask for specific categories, gift ideas, budget constraints, or age groups grounded in our 2,399-item knowledge graph.`,
+      text: `Welcome back, ${user.name}! I'm your Recoza conversational advisor. How can I guide your discovery today? You can ask for programming laptops under ₹70,000, top-rated movies, photography gifts, board games, or tech gear.`,
       timestamp: Date.now()
     }
   ])

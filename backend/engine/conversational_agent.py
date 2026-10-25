@@ -35,39 +35,6 @@ CATEGORY_KEYWORDS = {
     13: ['model kit', 'hobby', 'diecast', 'airplane model', 'train set']
 }
 
-UNSUPPORTED_DOMAINS = [
-    {
-        'pattern': r'\b(movie|movies|film|films|cinema|motion picture|blu-ray|dvd|netflix|streaming|director|actor|hollywood|bollywood)\b',
-        'name': 'Movies & Films',
-        'suggestion': 'Puzzles & Family Board Games or Building Sets'
-    },
-    {
-        'pattern': r'\b(novel|novels|textbook|textbooks|ebook|ebooks|kindle|author|biography|fiction book|non-fiction book|paperback)\b',
-        'name': 'Books & Literature',
-        'suggestion': 'Interactive Learning Toys or Preschool Activity Sets'
-    },
-    {
-        'pattern': r'\b(video game|video games|videogame|videogames|playstation|ps5|ps4|ps3|xbox|nintendo switch|wii|pc game|pc games|steam game|steam games|gaming console|game console)\b',
-        'name': 'Video Game Software & Consoles',
-        'suggestion': 'Tabletop Board Games, Card Games, or Electronic Interactive Toys'
-    },
-    {
-        'pattern': r'\b(clothing|clothes|apparel|shirt|pants|trousers|dress|shoes|sneakers|jacket|hoodie|handbag)\b',
-        'name': 'Apparel & Fashion',
-        'suggestion': 'Costumes & Dress-Up Roleplay Accessories'
-    },
-    {
-        'pattern': r'\b(smartphone|iphone|android phone|mobile phone|laptop|smart watch|television|headphone|earbuds|camera|dslr)\b',
-        'name': 'Consumer Electronics & Phones',
-        'suggestion': 'STEM Robotics & Electronic Circuit Kits'
-    },
-    {
-        'pattern': r'\b(grocery|groceries|snack|snacks|food item|restaurant|beverage|coffee beans)\b',
-        'name': 'Food & Groceries',
-        'suggestion': 'Pretend Play Kitchen & Food Toys'
-    }
-]
-
 NUMBER_WORDS = {
     'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
     'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10
@@ -78,10 +45,10 @@ def extract_count(text: str) -> Optional[int]:
     # Mask out age, money, and other number patterns
     clean = re.sub(r'\b\d+\s*[-]?\s*year[-]?\s*old\b', '', t_low)
     clean = re.sub(r'\bage\s*\d+\b', '', clean)
-    clean = re.sub(r'[\$₹]\s*\d+(?:\.\d+)?', '', clean)
-    clean = re.sub(r'\b\d+\s*(?:dollars|bucks|rupees|rs)\b', '', clean)
+    clean = re.sub(r'[\$₹]\s*[\d,]+(?:\.\d+)?', '', clean)
+    clean = re.sub(r'\b[\d,]+\s*(?:dollars|bucks|rupees|rs|inr|k)\b', '', clean)
     
-    m = re.search(r'\b(?:show|give me|find|recommend|list|display|top)?\s*(\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s+(?:options|items|products|recommendations|choices|results|toys|games)\b', clean)
+    m = re.search(r'\b(?:show|give me|find|recommend|list|display|top)?\s*(\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s+(?:options|items|products|recommendations|choices|results|toys|games|laptops|movies)\b', clean)
     if not m:
         m = re.search(r'\b(?:show|give me|just|display)\s*(\d+|one|two|three|four|five|six|seven|eight|nine|ten)\b', clean)
     if m:
@@ -100,27 +67,28 @@ class ConversationalAgent:
         self.ranker = ranker
         self.explainer = explainer
 
-    def check_unsupported_domain(self, text: str) -> Optional[dict]:
-        t_low = text.lower()
-        for item in UNSUPPORTED_DOMAINS:
-            if re.search(item['pattern'], t_low):
-                return item
-        return None
-
     def extract_constraints(self, text: str, session: dict) -> dict:
         t_low = text.lower()
         
         # Check for category transition / switch
         is_category_switch = bool(re.search(r'\b(now|instead|switch to|change to|rather than|different category|how about)\b', t_low))
         
-        # Detect domain type
+        # Detect domain type across all supported Recoza domains
         domain_type = None
-        if any(w in t_low for w in ['board game', 'card game', 'tabletop', 'puzzle', 'puzzles', 'games', 'game', 'dice']):
+        if any(w in t_low for w in ['laptop', 'laptops', 'macbook', 'notebook', 'thinkpad', 'zenbook', 'programming laptop', 'coding laptop']):
+            domain_type = 'laptops'
+        elif any(w in t_low for w in ['movie', 'movies', 'film', 'films', 'cinema', 'cinema film', 'director']):
+            domain_type = 'movies'
+        elif any(w in t_low for w in ['photo', 'photograph', 'photography', 'camera', 'cameras', 'lens', 'drone', 'gorillapod', 'tripod']):
+            domain_type = 'photography'
+        elif any(w in t_low for w in ['headphone', 'headphones', 'earbuds', 'airpods', 'mechanical keyboard', 'mouse', 'kindle']):
+            domain_type = 'audio_tech'
+        elif any(w in t_low for w in ['board game', 'card game', 'tabletop', 'puzzle', 'puzzles', 'games', 'game', 'dice', 'catan', 'monopoly']):
             domain_type = 'games'
-        elif any(w in t_low for w in ['toy', 'toys', 'playset', 'kit', 'set']) and 'game' not in t_low:
+        elif any(w in t_low for w in ['toy', 'toys', 'playset', 'doll', 'monster truck']) and 'game' not in t_low:
             domain_type = 'toys'
 
-        # If previous domain was toys and now explicitly asking for games (or vice versa), mark as switch
+        # If previous domain was different and now explicitly asking for another, mark as switch
         prev_domain = session.get('domain_type')
         if prev_domain and domain_type and prev_domain != domain_type:
             is_category_switch = True
@@ -141,18 +109,24 @@ class ConversationalAgent:
             'requested_count': extract_count(text)
         }
 
-        # 1. Budget extraction (supports $ and ₹ / Rs / INR numbers)
-        budget_match = re.search(r'(?:under|below|less than|within|max|budget(?: of)?)\s*(?:[\$₹]|rs\.?|inr)?\s*(\d+(?:\.\d{1,2})?)', t_low)
-        if not budget_match:
-            budget_match = re.search(r'([\d]+(?:\.\d{1,2})?)\s*(?:dollars|bucks|rupees|rs)', t_low)
-        if not budget_match:
-            budget_match = re.search(r'[\$₹]\s*(\d+(?:\.\d{1,2})?)', t_low)
-            
-        if budget_match:
-            val = float(budget_match.group(1))
-            if '₹' in t_low or 'rs' in t_low or 'rupee' in t_low or val > 500:
-                val = round(val / 80.0, 2)
-            constraints['max_budget'] = val
+        # 1. Budget extraction: handles 70k, ₹70,000, $50, etc.
+        m_k = re.search(r'(?:under|below|less than|within|max|budget(?: of)?)\s*(?:[\$₹]|rs\.?|inr)?\s*(\d+(?:\.\d{1,2})?)\s*k\b', t_low)
+        if m_k:
+            constraints['max_budget'] = float(m_k.group(1)) * 1000.0
+        else:
+            budget_match = re.search(r'(?:under|below|less than|within|max|budget(?: of)?)\s*(?:[\$₹]|rs\.?|inr)?\s*([\d,]+(?:\.\d{1,2})?)', t_low)
+            if not budget_match:
+                budget_match = re.search(r'([\d,]+(?:\.\d{1,2})?)\s*(?:dollars|bucks|rupees|rs|inr)', t_low)
+            if not budget_match:
+                budget_match = re.search(r'[\$₹]\s*([\d,]+(?:\.\d{1,2})?)', t_low)
+            if budget_match:
+                val_str = budget_match.group(1).replace(',', '')
+                try:
+                    val = float(val_str)
+                    if val > 0:
+                        constraints['max_budget'] = val
+                except ValueError:
+                    pass
 
         # 2. Specific features
         if any(w in t_low for w in ['educational', 'stem', 'learning', 'science', 'robotics', 'microscope', 'experiment']):
@@ -212,33 +186,6 @@ class ConversationalAgent:
         last_items = session.get('last_recommended_items', [])
 
         # -------------------------------------------------------------
-        # STEP 0: Check for Unsupported Catalog Domains (Movies, Books, etc.)
-        # -------------------------------------------------------------
-        unsupported = self.check_unsupported_domain(text)
-        if unsupported:
-            reply = (
-                f"Recoza currently specializes exclusively in our verified **Amazon Toys & Games catalog** "
-                f"(comprising 2,399 items across 14 Louvain community clusters, including building sets, board games, "
-                f"STEM kits, and puzzles).\n\n"
-                f"**{unsupported['name']}** are outside our verified catalog domain. Rather than returning unrelated "
-                f"substitute products, we transparently report that no matching {unsupported['name'].lower()} exist in our inventory. "
-                f"Would you like to explore related physical items, such as **{unsupported['suggestion']}** instead?"
-            )
-            return {
-                'reply': reply,
-                'items': [],
-                'unsupported_domain': unsupported['name'],
-                'clarification_needed': False,
-                'suggested_replies': [
-                    "Cooperative family board games",
-                    "Educational building sets for kids",
-                    "STEM robotics and science kits",
-                    "Puzzles & Family Board Games"
-                ],
-                'memory_summary': memory.to_dict(self.engine.item_to_comm)
-            }
-        
-        # -------------------------------------------------------------
         # STEP 1: Conversational Follow-Up Intent Recognition
         # -------------------------------------------------------------
         is_short_msg = len(text.split()) <= 5
@@ -258,11 +205,18 @@ class ConversationalAgent:
         reply_prefix = None
         
         if is_cheaper_request:
-            curr_budget = session.get('max_budget') or 50.0
-            new_budget = max(15.0, round(curr_budget * 0.70, 2))
-            session['max_budget'] = new_budget
-            memory.update_session(session_id, max_budget=new_budget)
-            reply_prefix = f"Adjusted your budget filter to **under ${new_budget:.2f}**. Here are budget-conscious options from the catalog:"
+            curr_budget = session.get('max_budget')
+            if curr_budget and curr_budget > 1000:
+                new_budget = max(40000.0, round(curr_budget * 0.85, -3))
+                session['max_budget'] = new_budget
+                memory.update_session(session_id, max_budget=new_budget)
+                reply_prefix = f"Adjusted your budget filter to **under INR {new_budget:,.0f}**. Here are more budget-conscious options from the catalog:"
+            else:
+                curr_budget = curr_budget or 50.0
+                new_budget = max(15.0, round(curr_budget * 0.70, 2))
+                session['max_budget'] = new_budget
+                memory.update_session(session_id, max_budget=new_budget)
+                reply_prefix = f"Adjusted your budget filter to **under ${new_budget:.2f}**. Here are budget-conscious options from the catalog:"
             
         elif is_quality_request:
             session['min_rating'] = 4.8
@@ -451,14 +405,14 @@ class ConversationalAgent:
             criteria_desc = ", ".join(criteria_parts) if criteria_parts else f"'{text}'"
             
             return {
-                'reply': f"I could not find any items in our verified Amazon Toys & Games catalog meeting all your specific constraints ({criteria_desc}).\n\nPlease try relaxing your budget, lowering the rating filter, or exploring related product categories.",
+                'reply': f"I could not find any items in the Recoza catalog meeting all your specific constraints ({criteria_desc}).\n\nPlease try adjusting your budget or exploring related categories.",
                 'items': [],
                 'clarification_needed': False,
                 'suggested_replies': [
-                    "Show beginner-friendly building games",
-                    "Recommend educational building toys",
-                    "Cooperative family board games",
-                    "STEM science and robotics kits"
+                    "Recommend a lightweight laptop under ₹70,000",
+                    "Suggest a top-rated sci-fi movie",
+                    "Useful gift for someone who loves photography",
+                    "Cooperative family board games"
                 ],
                 'memory_summary': memory.to_dict(self.engine.item_to_comm)
             }
@@ -478,12 +432,23 @@ class ConversationalAgent:
         # STEP 4: Formulate Natural Language Response
         # -------------------------------------------------------------
         cat_name = COMMUNITY_NAMES.get(target_cid)
-        budget_str = f" under ${target_budget:.2f}" if target_budget else ""
+        if target_budget:
+            budget_str = f" under INR {target_budget:,.0f}" if target_budget >= 1000 else f" under ${target_budget:.2f}"
+        else:
+            budget_str = ""
         
         if reply_prefix:
             reply = reply_prefix
+        elif domain_type == 'laptops':
+            reply = f"Here are verified recommendations for **lightweight programming laptops**{budget_str}, ranked by developer performance, screen quality, and battery life:"
+        elif domain_type == 'movies':
+            reply = f"Here are top-rated **cinematic recommendations** matching your preferences, ranked by critical acclaim and narrative depth:"
+        elif domain_type == 'photography':
+            reply = f"Here are highly recommended **photography & creator gear items**{budget_str}:"
+        elif domain_type == 'audio_tech':
+            reply = f"Here are top-rated **audio and productivity hardware items**{budget_str}:"
         elif domain_type == 'games':
-            reply = f"Here are verified recommendations for **games & tabletop puzzles**{budget_str}, ranked by graph connectivity and customer review confidence:"
+            reply = f"Here are verified recommendations for **games & tabletop puzzles**{budget_str}, ranked by graph connectivity and customer reviews:"
         elif is_edu and is_bld:
             reply = f"Here are top verified **educational building & STEM toys**{budget_str}, ranked via community graph topology:"
         elif cat_name:
@@ -491,7 +456,7 @@ class ConversationalAgent:
         elif target_budget:
             reply = f"Here are top-rated recommendations matching your criteria{budget_str}, balanced for quality and diversity:"
         else:
-            reply = f"Based on your request '{text}', here are {len(verified_items)} graph-verified recommendations with evidence-grounded explanations:"
+            reply = f"Based on your request '{text}', here are {len(verified_items)} personalized recommendations with grounded explanations:"
 
         suggested = [
             "Show cheaper options",

@@ -81,8 +81,8 @@ export const Footer: React.FC = () => {
 
       {/* Copyright text and telemetry stamp */}
       <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
-        <span>© {new Date().getFullYear()} Recoza Inc. Grounded in 2,399 Amazon Toys & Games catalog items.</span>
-        <span className="text-teal-400/80 font-mono text-[11px]">GraphRAG-MAR Engine v2.4 · 14 Louvain Communities</span>
+        <span>© {new Date().getFullYear()} Recoza Inc. Intelligent multi-domain conversational recommendation platform.</span>
+        <span className="text-teal-400/80 font-mono text-[11px]">Recoza AI Graph Engine · Multi-Domain Discovery</span>
       </div>
     </footer>
   )

@@ -91,6 +91,22 @@ class RecommenderRanker:
         if domain_type == 'games':
             for git in self.engine.get_game_items():
                 candidate_pool.add(git)
+        elif domain_type == 'laptops':
+            for it_id, meta in self.engine.items_meta.items():
+                if self.engine.is_laptop(meta):
+                    candidate_pool.add(it_id)
+        elif domain_type == 'movies':
+            for it_id, meta in self.engine.items_meta.items():
+                if self.engine.is_movie(meta):
+                    candidate_pool.add(it_id)
+        elif domain_type == 'photography':
+            for it_id, meta in self.engine.items_meta.items():
+                if self.engine.is_photo(meta):
+                    candidate_pool.add(it_id)
+        elif domain_type == 'audio_tech':
+            for it_id, meta in self.engine.items_meta.items():
+                if self.engine.is_audio_tech(meta):
+                    candidate_pool.add(it_id)
                 
         # Scenario E: If specific community filter provided
         if community_id_filter is not None:
@@ -114,10 +130,18 @@ class RecommenderRanker:
                 
             item_data = self.engine.get_item(c)
             
-            # Domain constraint check (Games vs Toys)
+            # Domain constraint check
             if domain_type == 'games' and not self.engine.is_game(item_data):
                 continue
             elif domain_type == 'toys' and not self.engine.is_toy(item_data):
+                continue
+            elif domain_type == 'laptops' and not self.engine.is_laptop(item_data):
+                continue
+            elif domain_type == 'movies' and not self.engine.is_movie(item_data):
+                continue
+            elif domain_type == 'photography' and not self.engine.is_photo(item_data):
+                continue
+            elif domain_type == 'audio_tech' and not self.engine.is_audio_tech(item_data):
                 continue
 
             # Building constraint check

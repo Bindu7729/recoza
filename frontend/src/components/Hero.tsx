@@ -21,10 +21,10 @@ interface HeroProps {
 }
 
 const EXAMPLE_PROMPTS = [
-  "Lego & architectural sets under $60",
-  "STEM robotics & science kits",
-  "Cooperative family board games",
-  "Creative arts & craft activity sets"
+  "Recommend a lightweight laptop for programming under ₹70,000",
+  "Suggest a sci-fi movie like Interstellar",
+  "Recommend a useful gift for someone who loves photography",
+  "Cooperative family board games & tabletop strategy"
 ]
 
 export const Hero: React.FC<HeroProps> = ({ onDiscover, onExploreHowItWorks }) => {
